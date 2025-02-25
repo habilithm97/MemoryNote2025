@@ -1,4 +1,4 @@
-package com.example.memorynote2025
+package com.example.memorynote2025.ui.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
