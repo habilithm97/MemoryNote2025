@@ -52,6 +52,6 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.runtime) // 기본 기능
-    ksp(libs.androidx.room.compiler) // DAO 구현제 자동 생성 (KSP로 최적화)
+    ksp(libs.androidx.room.compiler) // DAO 구현체 자동 생성 (KSP로 최적화)
     implementation(libs.androidx.room.ktx) // 코틀린 확장 기능 (코루틴, Flow)
 }
