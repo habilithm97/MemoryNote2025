@@ -19,6 +19,8 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
     init {
         val memoDao = MemoDatabase.getInstance(application).memoDao()
         memoRepository = MemoRepository(memoDao)
+        // UI에서 쉽게 관찰할 수 있도록 Flow를 LiveData로 변환
+        // UI는 LiveData만 관찰하고, 데이터 흐름은 그대로 유지 가능
         getAll = memoRepository.getAll().asLiveData()
     }
 
