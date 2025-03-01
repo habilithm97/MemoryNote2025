@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="메모"
+            android:text="@string/memo"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="2025.00.00 00:00" />
+                android:text="@string/date" />
 
             <ImageView
                 android:layout_width="match_parent"
