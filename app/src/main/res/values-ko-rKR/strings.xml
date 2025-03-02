@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">기억노트</string>
-    <string name="memo">Memo</string>
+    <string name="memo">메모</string>
     <string name="date">2025.00.00. 00:00</string>
+    <string name="date_format">yyyy.MM.dd. HH:mm</string>
 </resources>
