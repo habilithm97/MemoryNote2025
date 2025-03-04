@@ -21,10 +21,8 @@ class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK)
             binding.apply {
                 // Memo 데이터를 각 뷰에 할당
                 tvContent.text = memo.content
-                tvDate.text = SimpleDateFormat(
-                    itemView.context.getString(R.string.date_format),
-                    Locale.getDefault()
-                ).format(Date(memo.date))
+                tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
+                    Locale.getDefault()).format(Date(memo.date))
             }
         }
     }
@@ -41,12 +39,15 @@ class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK)
         }
     }
 
+    // ViewHolder 생성 (레이아웃을 뷰 객체로 변환 -> MemoViewHolder에 전달하여 반환)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoViewHolder {
         val binding = ItemMemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MemoViewHolder(binding)
     }
 
+    // ViewHolder에 데이터를 바인딩하여 UI 업데이트
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
+        // 현재 위치에 해당하는 Memo 객체를 가져와서 ViewHolder에 전달
         holder.bind(getItem(position))
     }
 }

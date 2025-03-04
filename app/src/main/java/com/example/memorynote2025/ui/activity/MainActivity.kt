@@ -5,7 +5,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityMainBinding
+import com.example.memorynote2025.ui.fragment.ListFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -20,9 +23,21 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         initView()
+
+        if (savedInstanceState == null) {
+            replaceFragment(ListFragment())
+        }
     }
 
     private fun initView() {
+        binding.apply {
+            setSupportActionBar(toolbar)
+        }
+    }
 
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment)
+            .commit()
     }
 }
