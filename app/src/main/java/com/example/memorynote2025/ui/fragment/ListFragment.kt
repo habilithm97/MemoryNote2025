@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.memorynote2025.R
+import com.example.memorynote2025.adapter.MemoAdapter
 import com.example.memorynote2025.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
-    private var _binding: FragmentListBinding? = null
-    private val binding get() = _binding!! // 항상 null-safe한 접근 가능
+    private var _binding: FragmentListBinding? = null // nullable
+    private val binding get() = _binding!! // non-null, 항상 null-safe한 접근 가능
+    private val memoAdapter by lazy { MemoAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +27,20 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-
+            recyclerView.apply {
+                adapter = memoAdapter
+                layoutManager = LinearLayoutManager(requireContext()).apply {
+                    reverseLayout = true
+                    stackFromEnd = true
+                }
+                setHasFixedSize(true) // 아이템 크기 고정 -> 성능 최적화
+            }
+            fab.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, MemoFragment())
+                    .addToBackStack(null) // 백 스택에 추가
+                    .commit()
+            }
         }
     }
 

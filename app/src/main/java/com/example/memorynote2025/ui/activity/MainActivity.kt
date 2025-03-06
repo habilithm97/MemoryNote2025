@@ -1,6 +1,7 @@
 package com.example.memorynote2025.ui.activity
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -32,7 +33,34 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         binding.apply {
             setSupportActionBar(toolbar)
+            setOnBackPressedCallback()
         }
+    }
+
+    // 업 버튼 활성화 (MemoFragment에서만)
+    fun showUpButton(show: Boolean) {
+        supportActionBar?.setDisplayHomeAsUpEnabled(show)
+    }
+
+    // 업 버튼 클릭 시 동작 (MemoFragment에서만)
+    override fun onSupportNavigateUp(): Boolean {
+        supportFragmentManager.popBackStack()
+        return true
+    }
+
+    // 백 버튼 클릭 시 동작
+    private fun setOnBackPressedCallback() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // 백 스택에 프래그먼트가 있을 경우 최상위 프래그먼트 제거
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    isEnabled = false // 현재 콜백 비활성화
+                    onBackPressedDispatcher.onBackPressed() // 기본 동작 (현재 화면 제거)
+                }
+            }
+        })
     }
 
     private fun replaceFragment(fragment: Fragment) {
