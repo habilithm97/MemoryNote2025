@@ -1,10 +1,12 @@
 package com.example.memorynote2025.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import com.example.memorynote2025.databinding.FragmentMemoBinding
 import com.example.memorynote2025.ui.activity.MainActivity
 
@@ -24,6 +26,17 @@ class MemoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // MainActivity 툴바에 업 버튼 활성화
         (activity as? MainActivity)?.showUpButton(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.apply {
+            edtMemo.requestFocus()
+            // requireContext : null을 반환하지 않는 Context를 보장
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(edtMemo, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     override fun onDestroyView() {
