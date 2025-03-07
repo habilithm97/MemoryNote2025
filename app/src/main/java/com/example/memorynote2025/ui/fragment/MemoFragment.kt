@@ -7,12 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.viewModels
 import com.example.memorynote2025.databinding.FragmentMemoBinding
+import com.example.memorynote2025.room.memo.Memo
 import com.example.memorynote2025.ui.activity.MainActivity
+import com.example.memorynote2025.viewmodel.MemoViewModel
 
 class MemoFragment : Fragment() {
     private var _binding: FragmentMemoBinding? = null
     private val binding get() = _binding!!
+    private val memoViewModel: MemoViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +30,21 @@ class MemoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // MainActivity 툴바에 업 버튼 활성화
         (activity as? MainActivity)?.showUpButton(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val memoStr = binding.edtMemo.text.toString()
+        if (memoStr.isNotBlank()) {
+            saveMemo(memoStr)
+        }
+    }
+
+    private fun saveMemo(memoStr: String) {
+        val date = System.currentTimeMillis()
+        val memo = Memo(content = memoStr, date  = date)
+        memoViewModel.insertMemo(memo)
     }
 
     override fun onResume() {

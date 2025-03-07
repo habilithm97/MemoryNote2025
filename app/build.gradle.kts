@@ -57,4 +57,7 @@ dependencies {
 
     // LiveData
     implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Fragment API에 코틀린 확장 기능(KTX) 추가
+    implementation(libs.androidx.fragment.ktx)
 }
