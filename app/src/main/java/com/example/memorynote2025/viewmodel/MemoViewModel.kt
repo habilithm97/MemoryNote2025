@@ -29,4 +29,10 @@ class MemoViewModel(application: Application) : AndroidViewModel(application) {
             memoRepository.insertMemo(memo)
         }
     }
+
+    fun updateMemo(memo: Memo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            memoRepository.updateMemo(memo)
+        }
+    }
 }

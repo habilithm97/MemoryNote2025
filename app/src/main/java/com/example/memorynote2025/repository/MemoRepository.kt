@@ -14,6 +14,9 @@ class MemoRepository(private val memoDao: MemoDao) {
     suspend fun insertMemo(memo: Memo) {
         memoDao.insertMemo(memo)
     }
+    suspend fun updateMemo(memo: Memo) {
+        memoDao.updateMemo(memo)
+    }
     fun getAll(): Flow<List<Memo>> {
         return memoDao.getAll()
     }

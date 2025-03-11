@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
+// 아이템 클릭 시 실행할 동작을 외부에서 전달 받음
+class MemoAdapter(private val onItemClick: (Memo) -> Unit) :
+    ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -23,6 +25,11 @@ class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK)
                 tvContent.text = memo.content
                 tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
                     Locale.getDefault()).format(Date(memo.date))
+
+                root.setOnClickListener {
+                    // 외부에서 전달 받은 onItemClick 호출, 현재 memo 객체 전달
+                    onItemClick(memo)
+                }
             }
         }
     }

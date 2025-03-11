@@ -9,13 +9,13 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorynote2025.R
 import com.example.memorynote2025.adapter.MemoAdapter
+import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.databinding.FragmentListBinding
 import com.example.memorynote2025.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null // nullable
     private val binding get() = _binding!! // non-null, 항상 null-safe한 접근 가능
-    private val memoAdapter by lazy { MemoAdapter() }
     private val memoViewModel: MemoViewModel by viewModels()
 
     override fun onCreateView(
@@ -29,6 +29,19 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 어댑터 생성 및 아이템 클릭 시 실행할 동작 정의
+        val memoAdapter = MemoAdapter(
+            onItemClick = { memo ->
+            val memoFragment = MemoFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(Constants.MEMO, memo)
+                }
+            }
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, memoFragment)
+                .addToBackStack(null)
+                .commit()
+        })
         binding.apply {
             recyclerView.apply {
                 adapter = memoAdapter
