@@ -1,7 +1,9 @@
 package com.example.memorynote2025.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +14,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// 아이템 클릭 시 실행할 동작을 외부에서 전달 받음
-class MemoAdapter(private val onItemClick: (Memo) -> Unit) :
+// 아이템 실행 동작을 외부에서 전달 받음
+class MemoAdapter(private val onItemClick: (Memo) -> Unit,
+                  private val onItemLongClick: (Memo) -> Unit) :
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
@@ -27,9 +30,28 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit) :
                     Locale.getDefault()).format(Date(memo.date))
 
                 root.setOnClickListener {
-                    // 외부에서 전달 받은 onItemClick 호출, 현재 memo 객체 전달
                     onItemClick(memo)
                 }
+                root.setOnLongClickListener {
+                    showPopupMenu(it, memo)
+                    true
+                }
+            }
+        }
+        private fun showPopupMenu(view: View, memo: Memo) {
+            PopupMenu(view.context, view).apply {
+                menuInflater.inflate(R.menu.item_popup_menu, menu)
+
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.delete -> {
+                            onItemLongClick(memo)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                show()
             }
         }
     }

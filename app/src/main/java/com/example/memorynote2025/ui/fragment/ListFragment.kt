@@ -1,5 +1,6 @@
 package com.example.memorynote2025.ui.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.example.memorynote2025.R
 import com.example.memorynote2025.adapter.MemoAdapter
 import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.databinding.FragmentListBinding
+import com.example.memorynote2025.room.memo.Memo
 import com.example.memorynote2025.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
@@ -29,7 +31,6 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 어댑터 생성 및 아이템 클릭 시 실행할 동작 정의
         val memoAdapter = MemoAdapter(
             onItemClick = { memo ->
             val memoFragment = MemoFragment().apply {
@@ -41,7 +42,10 @@ class ListFragment : Fragment() {
                 .replace(R.id.container, memoFragment)
                 .addToBackStack(null)
                 .commit()
-        })
+        },
+            onItemLongClick = { memo ->
+                showDeleteDialog(memo)
+            })
         binding.apply {
             recyclerView.apply {
                 adapter = memoAdapter
@@ -68,6 +72,18 @@ class ListFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showDeleteDialog(memo: Memo) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.delete))
+            .setMessage(getString(R.string.delete_dialog))
+            .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
+                memoViewModel.deleteMemo(memo)
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소",null)
+            .show()
     }
 
     override fun onDestroyView() {

@@ -19,7 +19,7 @@ class MemoFragment : Fragment() {
     private var _binding: FragmentMemoBinding? = null
     private val binding get() = _binding!!
     private val memoViewModel: MemoViewModel by viewModels()
-    private var previousMemo: Memo? = null // 받아온 메모
+    private var previousMemo: Memo? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

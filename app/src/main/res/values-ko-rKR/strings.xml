@@ -4,4 +4,7 @@
     <string name="memo">메모</string>
     <string name="date">2025.00.00. 00:00</string>
     <string name="date_format">yyyy.MM.dd. HH:mm</string>
+    <string name="delete">삭제</string>
+    <string name="delete_dialog">선택한 메모를 삭제할까요?</string>
+    <string name="cancel">취소</string>
 </resources>
