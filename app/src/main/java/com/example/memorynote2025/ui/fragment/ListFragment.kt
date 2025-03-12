@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorynote2025.R
@@ -31,6 +32,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 어댑터 생성 및 아이템 동작 정의
         val memoAdapter = MemoAdapter(
             onItemClick = { memo ->
             val memoFragment = MemoFragment().apply {
@@ -62,15 +64,24 @@ class ListFragment : Fragment() {
                     .commit()
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
-                // 어댑터에 새로운 리스트 제출
                 memoAdapter.apply {
-                    submitList(it) {
-                        if (itemCount > 0) {
-                            recyclerView.smoothScrollToPosition(itemCount - 1)
-                        }
+                    submitMemoList(it)
+                    if (itemCount > 0) {
+                        recyclerView.smoothScrollToPosition(itemCount - 1)
                     }
                 }
             }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                // 검색어 입력 시 호출
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    memoAdapter.filterList(newText ?: "") // null이면 "" 사용
+                    return true
+                }
+                // 키보드 검색 버튼 클릭 시 호출
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+            })
         }
     }
 
@@ -82,7 +93,7 @@ class ListFragment : Fragment() {
                 memoViewModel.deleteMemo(memo)
                 dialog.dismiss()
             }
-            .setNegativeButton("취소",null)
+            .setNegativeButton(getString(R.string.cancel),null)
             .show()
     }
 
