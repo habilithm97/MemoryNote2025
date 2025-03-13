@@ -26,7 +26,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
         submitList(list)
     }
 
-    fun filterList(searchText: String) {
+    fun filterList(searchText: String, onFilterComplete: () -> Unit) {
         val filteredList = if (searchText.isEmpty()) {
             memoList
         } else {
@@ -34,7 +34,9 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 it.content.contains(searchText, ignoreCase = true) // 대소문자 구분 없이 검색
             }
         }
-        submitList(filteredList)
+        submitList(filteredList) {
+            onFilterComplete() // 필터링 후속 작업
+        }
     }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
