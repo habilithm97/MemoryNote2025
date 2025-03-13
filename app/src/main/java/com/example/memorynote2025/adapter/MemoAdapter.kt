@@ -1,5 +1,6 @@
 package com.example.memorynote2025.adapter
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,12 +50,14 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
                     Locale.getDefault()).format(Date(memo.date))
 
-                root.setOnClickListener {
-                    onItemClick(memo)
-                }
-                root.setOnLongClickListener {
-                    showPopupMenu(it, memo)
-                    true
+                root.apply {
+                    setOnClickListener {
+                        onItemClick(memo)
+                    }
+                    setOnLongClickListener {
+                        showPopupMenu(it, memo)
+                        true
+                    }
                 }
             }
         }
@@ -70,6 +73,9 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                         }
                         else -> false
                     }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    setForceShowIcon(true) // 아이콘 강제 표시
                 }
                 show()
             }
