@@ -48,8 +48,16 @@ class ListFragment : Fragment() {
                         .addToBackStack(null)
                         .commit()
                 },
-                onItemLongClick = { memo ->
-                    showDeleteDialog(memo)
+                onItemLongClick = { memo, action ->
+                    when (action) {
+                        MemoAdapter.Action.DELETE ->
+                            showDeleteDialog(memo)
+                        MemoAdapter.Action.LOCK ->
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.container, PasswordFragment())
+                                .addToBackStack(null)
+                                .commit()
+                    }
                 }
             )
             recyclerView.apply {

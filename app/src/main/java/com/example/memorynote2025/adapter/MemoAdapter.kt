@@ -17,10 +17,11 @@ import java.util.Locale
 
 // 아이템 실행 동작을 외부에서 전달 받음
 class MemoAdapter(private val onItemClick: (Memo) -> Unit,
-                  private val onItemLongClick: (Memo) -> Unit) :
+                  private val onItemLongClick: (Memo, Action) -> Unit) :
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     private var memoList: List<Memo> = emptyList() // 전체 데이터 저장
+    enum class Action { DELETE, LOCK }
 
     fun submitMemoList(list: List<Memo>) {
         memoList = list
@@ -68,7 +69,11 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.delete -> {
-                            onItemLongClick(memo)
+                            onItemLongClick(memo, Action.DELETE)
+                            true
+                        }
+                        R.id.lock -> {
+                            onItemLongClick(memo, Action.LOCK)
                             true
                         }
                         else -> false

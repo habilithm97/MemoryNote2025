@@ -4,4 +4,8 @@
         android:id="@+id/delete"
         android:icon="@drawable/delete"
         android:title="@string/delete" />
+    <item
+        android:id="@+id/lock"
+        android:icon="@drawable/lock"
+        android:title="@string/lock" />
 </menu>
