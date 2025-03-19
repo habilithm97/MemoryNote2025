@@ -73,8 +73,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.container)
+        return if (currentFragment is ListFragment) {
+            menuInflater.inflate(R.menu.main_menu, menu)
+            true
+        } else {
+            false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

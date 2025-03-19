@@ -122,6 +122,12 @@ class ListFragment : Fragment() {
             .show()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().invalidateOptionsMenu() // 옵션 메뉴 업데이트
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 

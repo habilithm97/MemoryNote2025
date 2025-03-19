@@ -79,6 +79,8 @@ class MemoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        requireActivity().invalidateOptionsMenu() // 옵션 메뉴 업데이트
+
         binding.apply {
             edtMemo.requestFocus()
             // requireContext : null을 반환하지 않는 Context를 보장
