@@ -32,7 +32,9 @@ class SettingsActivity : AppCompatActivity() {
             listView.apply {
                 this.adapter = adapter
                 setOnItemClickListener { _, _, _, _ ->
-                    val intent = Intent(this@SettingsActivity, PasswordActivity::class.java)
+                    val intent = Intent(this@SettingsActivity, PasswordActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
                     startActivity(intent)
                 }
             }
