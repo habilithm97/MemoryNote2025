@@ -1,24 +1,28 @@
 package com.example.memorynote2025.ui.activity
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
+import com.example.memorynote2025.room.password.Password
+import com.example.memorynote2025.viewmodel.PasswordViewModel
 
 class PasswordActivity : AppCompatActivity() {
     private val binding by lazy { ActivityPasswordBinding.inflate(layoutInflater) }
+    private val passwordViewModel: PasswordViewModel by viewModels()
 
     private lateinit var dots: List<View>
     private var password = ""
-    private var isLocked = false // 입력 잠금 상태
+    private var confirmPassword = "" // 확인용 비밀번호
+    private var isLocked = false // 비밀번호 입력 잠금 상태
+    private var isConfirming = false // 비밀번호 확인 진행 상태
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,28 +50,60 @@ class PasswordActivity : AppCompatActivity() {
     }
 
     private fun onNumberClick(number: String) {
+        // 4자리 이상이면 추가 입력 제한
         if (password.length >= 4) return
 
         password += number
         updateDots()
 
+        // 4자리 입력 완료 시 처리
         if (password.length == 4) {
             isLocked = true // 입력 잠금
+
             Handler(Looper.getMainLooper()).postDelayed({
-                clearPassword()
+                if (!isConfirming) { // 첫 번째 입력일 경우
+                    confirmPassword = password // 저장
+                    isConfirming = true // 확인중으로 변경
+                    binding.textView.text = getString(R.string.password_reenter)
+                    password = ""
+                } else { // 두 번째 입력일 경우
+                    checkPassword()
+                }
+                updateDots()
+                isLocked = false // 입력 잠금 해제
             }, 500)
         }
     }
 
     private fun updateDots() {
-        for (i in dots.indices) {
+        for (i in dots.indices) { // dots의 모든 인덱스를 순회
+            // 현재 입력된 비밀번호 개수보다 작은 인덱스만 활성화
             dots[i].isSelected = i < password.length
         }
     }
 
+    private fun checkPassword() {
+        if (password == confirmPassword) {
+            savePassword(password)
+        } else {
+            binding.textView.text = getString(R.string.password_reenter)
+            clearPassword()
+        }
+    }
+
+    private fun savePassword(pw: String) {
+        val password = Password(password = pw)
+        passwordViewModel.insertPassword(password)
+        Handler(Looper.getMainLooper()).postDelayed({
+            finish()
+        }, 500)
+    }
+
     private fun clearPassword() {
         isLocked = false // 입력 잠금 해제
+        isConfirming = false
         password = ""
+        confirmPassword = ""
         updateDots()
     }
 }

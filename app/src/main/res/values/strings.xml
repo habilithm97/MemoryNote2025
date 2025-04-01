@@ -10,4 +10,6 @@
     <string name="settings">Settings</string>
     <string name="password_settings">Set and Change Password</string>
     <string name="password_new">Enter New Password</string>
+    <string name="password_confirm">Password Confirmation</string>
+    <string name="password_reenter">Password Reenter</string>
 </resources>
