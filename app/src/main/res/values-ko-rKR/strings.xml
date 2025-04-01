@@ -13,4 +13,5 @@
     <string name="password_new">새로운 비밀번호 입력</string>
     <string name="password_confirm">비밀번호 확인</string>
     <string name="password_reenter">비밀번호 재입력</string>
+    <string name="password_setup_complete">비밀번호 설정 완료!</string>
 </resources>

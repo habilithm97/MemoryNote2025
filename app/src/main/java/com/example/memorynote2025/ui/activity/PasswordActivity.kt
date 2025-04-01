@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
 import com.example.memorynote2025.room.password.Password
+import com.example.memorynote2025.utils.ToastUtil
 import com.example.memorynote2025.viewmodel.PasswordViewModel
 
 class PasswordActivity : AppCompatActivity() {
@@ -95,6 +96,7 @@ class PasswordActivity : AppCompatActivity() {
         val password = Password(password = pw)
         passwordViewModel.insertPassword(password)
         Handler(Looper.getMainLooper()).postDelayed({
+            ToastUtil.showToast(this@PasswordActivity, getString(R.string.password_setup_complete))
             finish()
         }, 500)
     }
