@@ -28,7 +28,10 @@ class PasswordViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    suspend fun getPassword(): Password? {
-        return passwordRepository.getPassword()
+    // 저장된 비밀번호를 가져와 콜백 함수에 전달
+    fun getPassword(onResult: (Password?) -> Unit) {
+        viewModelScope.launch {
+            onResult(passwordRepository.getPassword())
+        }
     }
 }

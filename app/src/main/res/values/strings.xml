@@ -13,4 +13,6 @@
     <string name="password_confirm">Password Confirmation</string>
     <string name="password_reenter">Password Reenter</string>
     <string name="password_setup_complete">Password setup complete!</string>
+    <string name="password_change">Password Change</string>
+    <string name="password_enter">Password Enter</string>
 </resources>
