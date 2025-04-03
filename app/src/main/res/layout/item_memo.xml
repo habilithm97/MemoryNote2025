@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="@font/bookkmyungjo_light"
-                android:text="@string/date" />
+                android:text="2025.00.00. 00:00" />
 
             <ImageView
                 android:layout_width="match_parent"
