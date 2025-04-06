@@ -52,13 +52,11 @@ class ListFragment : Fragment() {
                     when (action) {
                         MemoAdapter.Action.DELETE ->
                             showDeleteDialog(memo)
-                        MemoAdapter.Action.LOCK -> {
+                        MemoAdapter.Action.LOCK ->
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.container, PasswordFragment())
                                 .addToBackStack(null)
                                 .commit()
-                        }
-
                     }
                 }
             )

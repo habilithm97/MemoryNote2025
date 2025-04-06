@@ -11,5 +11,6 @@ import kotlinx.parcelize.Parcelize
 data class Memo(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "content") var content: String,
-    @ColumnInfo(name = "date") var date: Long
+    @ColumnInfo(name = "date") var date: Long,
+    @ColumnInfo(name = "islocked") var isLocked: Boolean = false
 ) : Parcelable // 컴포넌트 간에 데이터를 전달할 수 있도록 직렬화

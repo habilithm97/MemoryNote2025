@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 // 추상 클래스로 선언 -> Room이 DB 구현체를 자동으로 생성
-@Database(entities = [Memo::class], version = 1)
+@Database(entities = [Memo::class], version = 2)
 abstract class MemoDatabase : RoomDatabase() {
     abstract fun memoDao(): MemoDao
 
@@ -25,9 +27,15 @@ abstract class MemoDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     MemoDatabase::class.java, "memo.db")
+                    .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE = instance // 새로 생성한 instance를 INSTANCE에 저장
                 instance
+            }
+        }
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("alter table memos add column islocked integer not null default 0")
             }
         }
     }
