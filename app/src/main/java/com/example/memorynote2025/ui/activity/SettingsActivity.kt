@@ -27,6 +27,14 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar?.apply {
+                setDisplayHomeAsUpEnabled(true)
+                title = getString(R.string.settings)
+            }
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
             val items = listOf(getString(R.string.password_settings))
             val adapter = ArrayAdapter(this@SettingsActivity, android.R.layout.simple_list_item_1, items)
             listView.apply {
