@@ -6,6 +6,7 @@
 
     <string name="delete">Delete</string>
     <string name="lock">Lock</string>
+    <string name="unlock">UnLock</string>
     <string name="delete_dialog">Do you want to delete the selected memo?</string>
     <string name="cancel">Cancel</string>
 

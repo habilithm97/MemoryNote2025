@@ -67,6 +67,13 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             PopupMenu(view.context, view).apply {
                 menuInflater.inflate(R.menu.item_popup_menu, menu)
 
+                // 메모 잠금 상태에 따른 잠금 메뉴 텍스트 동적 변경
+                val lockItem = menu.findItem(R.id.lock)
+                lockItem.title = if (memo.isLocked) {
+                    view.context.getString(R.string.unlock)
+                } else {
+                    view.context.getString(R.string.lock)
+                }
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.delete -> {
