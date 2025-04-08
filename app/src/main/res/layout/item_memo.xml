@@ -44,7 +44,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="8"
                 android:src="@drawable/lock"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
         </LinearLayout>
     </LinearLayout>
