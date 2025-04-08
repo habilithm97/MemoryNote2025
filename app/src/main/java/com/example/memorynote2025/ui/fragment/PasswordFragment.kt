@@ -17,12 +17,14 @@ import com.example.memorynote2025.R
 import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.databinding.FragmentPasswordBinding
 import com.example.memorynote2025.room.memo.Memo
+import com.example.memorynote2025.viewmodel.MemoViewModel
 import com.example.memorynote2025.viewmodel.PasswordViewModel
 
 class PasswordFragment : Fragment() {
     private var _binding: FragmentPasswordBinding? = null
     private val binding get() = _binding!!
     private val passwordViewModel: PasswordViewModel by viewModels()
+    private val memoViewModel: MemoViewModel by viewModels()
 
     private lateinit var dots: List<View>
 
@@ -30,6 +32,14 @@ class PasswordFragment : Fragment() {
     private var storedPassword: String? = null // 저장된 비밀번호
 
     private var isLocked = false // 비밀번호 입력 잠금 여부
+
+    private val memo: Memo by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(Constants.MEMO, Memo::class.java)!!
+        } else {
+            TODO("VERSION.SDK_INT < TIRAMISU")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +57,10 @@ class PasswordFragment : Fragment() {
                 btn.setOnClickListener { onNumberClick(btn.text.toString()) }
             }
             dots = listOf(dot1, dot2, dot3, dot4)
+
+            btnCancel.setOnClickListener {
+                requireActivity().supportFragmentManager.popBackStack()
+            }
         }
     }
 
@@ -71,6 +85,7 @@ class PasswordFragment : Fragment() {
         passwordViewModel.getPassword { savedPw ->
             storedPassword = savedPw?.password
             if (storedPassword == password) { // 일치
+                memoViewModel.updateMemo(memo.copy(isLocked = true))
                 requireActivity().supportFragmentManager.popBackStack()
             } else { // 불일치
                 vibrate()

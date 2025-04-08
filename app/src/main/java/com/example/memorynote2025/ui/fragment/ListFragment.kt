@@ -52,11 +52,17 @@ class ListFragment : Fragment() {
                     when (action) {
                         MemoAdapter.Action.DELETE ->
                             showDeleteDialog(memo)
-                        MemoAdapter.Action.LOCK ->
+                        MemoAdapter.Action.LOCK -> {
+                            val passwordFragment = PasswordFragment().apply {
+                                arguments = Bundle().apply {
+                                    putParcelable(Constants.MEMO, memo)
+                                }
+                            }
                             parentFragmentManager.beginTransaction()
-                                .replace(R.id.container, PasswordFragment())
+                                .replace(R.id.container, passwordFragment)
                                 .addToBackStack(null)
                                 .commit()
+                        }
                     }
                 }
             )

@@ -50,6 +50,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 tvContent.text = memo.content
                 tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
                     Locale.getDefault()).format(Date(memo.date))
+                ivLock.visibility = if (memo.isLocked) View.VISIBLE else View.INVISIBLE
 
                 root.apply {
                     setOnClickListener {
