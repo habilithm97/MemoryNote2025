@@ -1,13 +1,9 @@
 package com.example.memorynote2025.ui.activity
 
-import android.content.Context
-import android.os.Build
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -18,6 +14,7 @@ import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
 import com.example.memorynote2025.room.password.Password
 import com.example.memorynote2025.utils.ToastUtil
+import com.example.memorynote2025.utils.VibrateUtil
 import com.example.memorynote2025.viewmodel.PasswordViewModel
 
 class PasswordActivity : AppCompatActivity() {
@@ -118,7 +115,7 @@ class PasswordActivity : AppCompatActivity() {
         if (password == confirmPassword) {
             savePassword(password)
         } else {
-            vibrate()
+            VibrateUtil.vibrate(this@PasswordActivity)
             binding.tvPwTitle.text = getString(R.string.password_reenter)
             clearPassword()
         }
@@ -130,7 +127,7 @@ class PasswordActivity : AppCompatActivity() {
             password = ""
             isChanging = true
         } else {
-            vibrate()
+            VibrateUtil.vibrate(this@PasswordActivity)
             binding.tvPwTitle.text = getString(R.string.password_reenter)
             clearPassword()
         }
@@ -151,25 +148,5 @@ class PasswordActivity : AppCompatActivity() {
         password = ""
         confirmPassword = ""
         updateDots()
-    }
-
-    private fun vibrate() {
-        // Vibrator 객체 가져오기
-        // API 31 이상 (VibratorManager 사용)
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION") // 경고 메시지 무시
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-        // 진동 실행
-        // API 26 이상 (VibrationEffect 사용)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(200)
-        }
     }
 }

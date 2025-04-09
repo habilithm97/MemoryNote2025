@@ -1,13 +1,9 @@
 package com.example.memorynote2025.ui.fragment
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +13,7 @@ import com.example.memorynote2025.R
 import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.databinding.FragmentPasswordBinding
 import com.example.memorynote2025.room.memo.Memo
+import com.example.memorynote2025.utils.VibrateUtil
 import com.example.memorynote2025.viewmodel.MemoViewModel
 import com.example.memorynote2025.viewmodel.PasswordViewModel
 
@@ -88,7 +85,7 @@ class PasswordFragment : Fragment() {
                 memoViewModel.updateMemo(memo.copy(isLocked = true))
                 requireActivity().supportFragmentManager.popBackStack()
             } else { // 불일치
-                vibrate()
+                VibrateUtil.vibrate(requireContext())
                 binding.tvPwTitle.text = getString(R.string.password_reenter)
             }
             password = ""
@@ -108,25 +105,5 @@ class PasswordFragment : Fragment() {
         super.onDestroyView()
 
         _binding = null
-    }
-
-    private fun vibrate() {
-        // Vibrator 객체 가져오기
-        // API 31 이상 (VibratorManager 사용)
-        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = requireContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION") // 경고 메시지 무시
-            requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-        // 진동 실행
-        // API 26 이상 (VibrationEffect 사용)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(200)
-        }
     }
 }
