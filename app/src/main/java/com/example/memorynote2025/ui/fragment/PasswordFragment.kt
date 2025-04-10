@@ -81,9 +81,24 @@ class PasswordFragment : Fragment() {
     private fun checkPassword() {
         passwordViewModel.getPassword { savedPw ->
             storedPassword = savedPw?.password
-            if (storedPassword == password) { // 일치
-                memoViewModel.updateMemo(memo.copy(isLocked = true))
-                requireActivity().supportFragmentManager.popBackStack()
+            if (storedPassword == password) { // 비밀번호 일치
+                if (memo.isLocked) { // 메모가 잠겨있는 경우 -> MemoFragment로 이동
+                    val memoFragment = MemoFragment().apply {
+                        arguments = Bundle().apply {
+                            putParcelable(Constants.MEMO, memo)
+                        }
+                    }
+                    parentFragmentManager.apply {
+                        popBackStack() // PasswordFragment 제거
+                        beginTransaction()
+                            .replace(R.id.container, memoFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                } else { // 메모가 잠겨있지 않은 경우 -> 이전 화면인 ListFragment로 이동
+                    memoViewModel.updateMemo(memo.copy(isLocked = true))
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
             } else { // 불일치
                 VibrateUtil.vibrate(requireContext())
                 binding.tvPwTitle.text = getString(R.string.password_reenter)

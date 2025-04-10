@@ -38,15 +38,27 @@ class ListFragment : Fragment() {
                 onItemClick = { memo ->
                     searchView.setQuery("", false) // 검색어 초기화
 
-                    val memoFragment = MemoFragment().apply {
-                        arguments = Bundle().apply {
-                            putParcelable(Constants.MEMO, memo)
+                    if (memo.isLocked) { // 메모가 잠겨있는 경우 -> PasswordFragment로 이동
+                        val passwordFragment = PasswordFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable(Constants.MEMO, memo)
+                            }
                         }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, passwordFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    } else { // 메모가 잠겨있지 않은 경우 -> 바로 MemoFragment로 이동
+                        val memoFragment = MemoFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable(Constants.MEMO, memo)
+                            }
+                        }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, memoFragment)
+                            .addToBackStack(null)
+                            .commit()
                     }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.container, memoFragment)
-                        .addToBackStack(null)
-                        .commit()
                 },
                 onItemLongClick = { memo, action ->
                     when (action) {
