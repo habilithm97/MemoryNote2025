@@ -1,6 +1,5 @@
 package com.example.memorynote2025.ui.activity
 
-
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
