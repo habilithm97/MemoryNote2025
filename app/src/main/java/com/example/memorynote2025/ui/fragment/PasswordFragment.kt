@@ -82,22 +82,29 @@ class PasswordFragment : Fragment() {
         passwordViewModel.getPassword { savedPw ->
             storedPassword = savedPw?.password
             if (storedPassword == password) { // 비밀번호 일치
-                if (memo.isLocked) { // 메모가 잠겨있는 경우 -> MemoFragment로 이동
-                    val memoFragment = MemoFragment().apply {
-                        arguments = Bundle().apply {
-                            putParcelable(Constants.MEMO, memo)
-                        }
-                    }
-                    parentFragmentManager.apply {
-                        popBackStack() // PasswordFragment 제거
-                        beginTransaction()
-                            .replace(R.id.container, memoFragment)
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                } else { // 메모가 잠겨있지 않은 경우 -> 이전 화면인 ListFragment로 이동
-                    memoViewModel.updateMemo(memo.copy(isLocked = true))
+                // PasswordFragment로 넘어올 때 잠금 해제 모드인지 확인 (기본값은 false)
+                val unlockMode = arguments?.getBoolean(Constants.UNLOCK_MODE, false) ?: false
+                if (unlockMode) { // 잠금 해제 모드일 경우 false로 바꾸고 다시 ListFragment로 이동
+                    memoViewModel.updateMemo(memo.copy(isLocked = false))
                     requireActivity().supportFragmentManager.popBackStack()
+                } else { // 잠금 모드일 경우
+                    if (memo.isLocked) { // 메모가 잠겨있는 경우 -> MemoFragment로 이동
+                        val memoFragment = MemoFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable(Constants.MEMO, memo)
+                            }
+                        }
+                        parentFragmentManager.apply {
+                            popBackStack() // PasswordFragment 제거
+                            beginTransaction()
+                                .replace(R.id.container, memoFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    } else { // 메모가 잠겨있지 않은 경우 -> 이전 화면인 ListFragment로 이동
+                        memoViewModel.updateMemo(memo.copy(isLocked = true))
+                        requireActivity().supportFragmentManager.popBackStack()
+                    }
                 }
             } else { // 불일치
                 VibrateUtil.vibrate(requireContext())
@@ -107,7 +114,7 @@ class PasswordFragment : Fragment() {
             updateDots()
             isLocked = false
         }
-    }
+    }// 근데 잠금 해제일 경우엔 isLocked를 false로 바꾸면서 다시 ListFragment로 가야됨
 
     private fun updateDots() {
         for (i in dots.indices) { // dots의 모든 인덱스를 순회

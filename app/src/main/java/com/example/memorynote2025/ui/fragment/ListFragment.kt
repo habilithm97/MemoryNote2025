@@ -68,6 +68,7 @@ class ListFragment : Fragment() {
                             val passwordFragment = PasswordFragment().apply {
                                 arguments = Bundle().apply {
                                     putParcelable(Constants.MEMO, memo)
+                                    putBoolean(Constants.UNLOCK_MODE, memo.isLocked)
                                 }
                             }
                             parentFragmentManager.beginTransaction()
