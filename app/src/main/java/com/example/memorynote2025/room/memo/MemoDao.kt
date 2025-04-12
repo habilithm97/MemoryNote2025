@@ -22,14 +22,14 @@ interface MemoDao {
     @Query("select * from memos order by date")
     fun getAll(): Flow<List<Memo>>
 }
-
 /*
 * suspend
- -오래 걸리는 작업 (Room DB, 네트워크) 비동기 처리
- -일시 중단 가능 -> UI 스레드 차단 없이 실행
+ -오래 걸리는 작업 (Room DB, 네트워크 등) 비동기 처리
+ -UI 스레드 차단 없이 중단/재개 가능
 
 * Flow
  -비동기 데이터 스트림 처리
- -순차적이고 지속적인 데이터 방출
+ -순차적/지속적 데이터 방출
  -UI 생명주기와 독립적으로 작동
+ -구독 방식으로 실시간 데이터 수신 가능
  */

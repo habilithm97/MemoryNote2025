@@ -114,7 +114,7 @@ class PasswordFragment : Fragment() {
             updateDots()
             isLocked = false
         }
-    }// 근데 잠금 해제일 경우엔 isLocked를 false로 바꾸면서 다시 ListFragment로 가야됨
+    }
 
     private fun updateDots() {
         for (i in dots.indices) { // dots의 모든 인덱스를 순회
