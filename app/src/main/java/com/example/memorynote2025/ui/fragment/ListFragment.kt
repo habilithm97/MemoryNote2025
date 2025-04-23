@@ -150,6 +150,6 @@ class ListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        _binding = null // 메모리 릭 방지
+        _binding = null // 메모리 누수 방지
     }
 }

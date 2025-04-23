@@ -9,30 +9,31 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memorynote2025.R
+import com.example.memorynote2025.constants.PopupAction
 import com.example.memorynote2025.databinding.ItemMemoBinding
 import com.example.memorynote2025.room.memo.Memo
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// 아이템 실행 동작을 외부에서 전달 받음
+// 아이템 클릭 동작을 외부에서 전달 받음
 class MemoAdapter(private val onItemClick: (Memo) -> Unit,
-                  private val onItemLongClick: (Memo, Action) -> Unit) :
+                  private val onItemLongClick: (Memo, PopupAction) -> Unit) :
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
-    private var memoList: List<Memo> = emptyList() // 전체 데이터 저장
-    enum class Action { DELETE, LOCK }
+    private var memoList: List<Memo> = emptyList() // 원본 리스트
 
+    // 원본 리스트 초기화 후 어댑터에 제출
     fun submitMemoList(list: List<Memo>) {
         memoList = list
         submitList(list)
     }
 
     fun filterList(searchText: String, onFilterComplete: () -> Unit) {
-        val filteredList = if (searchText.isEmpty()) {
-            memoList
-        } else {
-            memoList.filter {
+        val filteredList = if (searchText.isEmpty()) { // 비어 있으면 (공백 검색 가능)
+            memoList // 원본 리스트
+        } else { // 비어있지 않으면
+            memoList.filter { // 필터링
                 it.content.contains(searchText, ignoreCase = true) // 대소문자 구분 없이 검색
             }
         }
@@ -68,8 +69,8 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 menuInflater.inflate(R.menu.item_popup_menu, menu)
 
                 // 메모 잠금 상태에 따른 잠금 메뉴 텍스트 동적 변경
-                val lockItem = menu.findItem(R.id.lock)
-                lockItem.title = if (memo.isLocked) {
+                val lockMenuItem = menu.findItem(R.id.lock)
+                lockMenuItem.title = if (memo.isLocked) {
                     view.context.getString(R.string.unlock)
                 } else {
                     view.context.getString(R.string.lock)
@@ -77,11 +78,11 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.delete -> {
-                            onItemLongClick(memo, Action.DELETE)
+                            onItemLongClick(memo, PopupAction.DELETE)
                             true
                         }
                         R.id.lock -> {
-                            onItemLongClick(memo, Action.LOCK)
+                            onItemLongClick(memo, PopupAction.LOCK)
                             true
                         }
                         else -> false
@@ -95,7 +96,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
         }
     }
 
-    companion object {
+    companion object { // 클래스 내부에서 객체 없이 접근 가능한 정적 멤버
         // RecyclerView 성능 최적화를 위해 변경 사항만 업데이트
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Memo>() {
             override fun areItemsTheSame(oldItem: Memo, newItem: Memo): Boolean {
@@ -115,7 +116,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
 
     // ViewHolder에 데이터를 바인딩하여 UI 업데이트
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
-        // 현재 위치에 해당하는 Memo 객체를 가져와서 ViewHolder에 전달
+        // 현재 위치의 Memo 객체를 가져와서 ViewHolder에 전달
         holder.bind(getItem(position))
     }
 }
