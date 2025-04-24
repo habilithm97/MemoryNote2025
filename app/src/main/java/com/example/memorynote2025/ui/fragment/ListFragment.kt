@@ -40,7 +40,7 @@ class ListFragment : Fragment() {
                 onItemClick = { memo ->
                     searchView.setQuery("", false) // 검색어 초기화
 
-                    if (memo.isLocked) { // 메모가 잠겨있으면 -> PasswordFragment로 이동
+                    if (memo.isLocked) { // 메모가 잠겨 있으면 -> PasswordFragment로 이동
                         val passwordFragment = PasswordFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(Constants.MEMO, memo)
@@ -50,7 +50,7 @@ class ListFragment : Fragment() {
                             .replace(R.id.container, passwordFragment)
                             .addToBackStack(null)
                             .commit()
-                    } else { // 메모가 잠겨있지 않으면 -> 바로 MemoFragment로 이동
+                    } else { // 메모가 잠겨 있지 않으면 -> 바로 MemoFragment로 이동
                         val memoFragment = MemoFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(Constants.MEMO, memo)
