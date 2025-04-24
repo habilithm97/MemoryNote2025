@@ -31,13 +31,13 @@ class MemoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // MainActivity 툴바에 업 버튼 활성화
+        // MainActivity 툴바 업 버튼 활성화
         (activity as? MainActivity)?.showUpButton(true)
 
         previousMemo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable(Constants.MEMO, Memo::class.java)
         } else {
-            @Suppress("DEPRECATION") // API 33 미만 호환성 처리
+            @Suppress("DEPRECATION")
             arguments?.getParcelable(Constants.MEMO)
         }
         if (previousMemo != null) {
@@ -50,7 +50,7 @@ class MemoFragment : Fragment() {
 
         val currentMemo = binding.edtMemo.text.toString()
 
-        // 메모가 비어있지 않고, 이전 메모와 다를 경우에만 처리
+        // 메모가 비어 있지 않고, 이전 메모와 다르면 처리
         if (currentMemo.isNotBlank() && currentMemo != previousMemo?.content) {
             if (previousMemo != null) { // 수정 모드
                 updateMemo(currentMemo)
@@ -68,11 +68,10 @@ class MemoFragment : Fragment() {
 
     private fun updateMemo(currentMemo: String) {
         val date = System.currentTimeMillis()
-        // 기존 memo 객체의 content만 수정하여 새로운 객체 생성
-        val updatedMemo = previousMemo?.copy(content = currentMemo, date = date)
+        val memo = previousMemo?.copy(content = currentMemo, date = date)
 
-        if (updatedMemo != null) {
-            memoViewModel.updateMemo(updatedMemo)
+        if (memo != null) {
+            memoViewModel.updateMemo(memo)
         }
     }
 
