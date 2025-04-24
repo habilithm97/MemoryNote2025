@@ -83,7 +83,7 @@ class PasswordFragment : Fragment() {
             storedPassword = savedPw?.password
             if (storedPassword == password) { // 비밀번호 일치
                 // PasswordFragment로 넘어올 때 잠금 해제 모드인지 확인 (기본값은 false)
-                val unlockMode = arguments?.getBoolean(Constants.UNLOCK_MODE, false) ?: false
+                val unlockMode = arguments?.getBoolean(Constants.LOCK_STATE, false) ?: false
                 if (unlockMode) { // 잠금 해제 모드일 경우 false로 바꾸고 다시 ListFragment로 이동
                     memoViewModel.updateMemo(memo.copy(isLocked = false))
                     requireActivity().supportFragmentManager.popBackStack()

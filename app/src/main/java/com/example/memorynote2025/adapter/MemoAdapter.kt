@@ -30,7 +30,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
     }
 
     fun filterList(searchText: String, onFilterComplete: () -> Unit) {
-        val filteredList = if (searchText.isEmpty()) { // 비어 있으면 (공백 검색 가능)
+        val filteredList = if (searchText.isEmpty()) { // 비어 있으면
             memoList // 원본 리스트
         } else { // 비어있지 않으면
             memoList.filter { // 필터링

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorynote2025.R
 import com.example.memorynote2025.adapter.MemoAdapter
 import com.example.memorynote2025.constants.Constants
+import com.example.memorynote2025.constants.PopupAction
 import com.example.memorynote2025.databinding.FragmentListBinding
 import com.example.memorynote2025.room.memo.Memo
 import com.example.memorynote2025.viewmodel.MemoViewModel
@@ -19,6 +20,7 @@ import com.example.memorynote2025.viewmodel.MemoViewModel
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null // nullable
     private val binding get() = _binding!! // non-null, 항상 null-safe한 접근 가능
+    // 프래그먼트 생명주기에 맞춰 MemoViewModel 생성
     private val memoViewModel: MemoViewModel by viewModels()
 
     override fun onCreateView(
@@ -33,12 +35,12 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            // 어댑터 생성 및 아이템 동작 정의
+            // 어댑터 생성 및 아이템 클릭 동작 정의
             val memoAdapter = MemoAdapter(
                 onItemClick = { memo ->
                     searchView.setQuery("", false) // 검색어 초기화
 
-                    if (memo.isLocked) { // 메모가 잠겨있는 경우 -> PasswordFragment로 이동
+                    if (memo.isLocked) { // 메모가 잠겨있으면 -> PasswordFragment로 이동
                         val passwordFragment = PasswordFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(Constants.MEMO, memo)
@@ -48,7 +50,7 @@ class ListFragment : Fragment() {
                             .replace(R.id.container, passwordFragment)
                             .addToBackStack(null)
                             .commit()
-                    } else { // 메모가 잠겨있지 않은 경우 -> 바로 MemoFragment로 이동
+                    } else { // 메모가 잠겨있지 않으면 -> 바로 MemoFragment로 이동
                         val memoFragment = MemoFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(Constants.MEMO, memo)
@@ -62,13 +64,13 @@ class ListFragment : Fragment() {
                 },
                 onItemLongClick = { memo, action ->
                     when (action) {
-                        MemoAdapter.Action.DELETE ->
+                        PopupAction.DELETE ->
                             showDeleteDialog(memo)
-                        MemoAdapter.Action.LOCK -> {
+                        PopupAction.LOCK -> {
                             val passwordFragment = PasswordFragment().apply {
                                 arguments = Bundle().apply {
                                     putParcelable(Constants.MEMO, memo)
-                                    putBoolean(Constants.UNLOCK_MODE, memo.isLocked)
+                                    putBoolean(Constants.LOCK_STATE, memo.isLocked)
                                 }
                             }
                             parentFragmentManager.beginTransaction()
@@ -92,7 +94,7 @@ class ListFragment : Fragment() {
 
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, MemoFragment())
-                    .addToBackStack(null) // 백 스택에 추가
+                    .addToBackStack(null)
                     .commit()
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
@@ -108,7 +110,7 @@ class ListFragment : Fragment() {
                 override fun onQueryTextChange(newText: String?): Boolean {
                     memoAdapter.apply {
                         filterList(newText.orEmpty()) { // null이면 "" 사용 (null 방지)
-                            if (newText.isNullOrEmpty()) { // 검색어 없을 시 (검색어 유무 체크)
+                            if (newText.isNullOrEmpty()) { // 검색어가 없으면 (검색어 유무 체크)
                                 recyclerView.apply {
                                     post {
                                         if (itemCount > 0) {
