@@ -36,26 +36,14 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         binding.apply {
             setSupportActionBar(toolbar)
-            setOnBackPressedCallback()
+            setOnBackPressedCallback() // 백 버튼 동작
         }
     }
 
-    // 업 버튼 활성화 (MemoFragment에서만)
-    fun showUpButton(show: Boolean) {
-        supportActionBar?.setDisplayHomeAsUpEnabled(show)
-    }
-
-    // 업 버튼 클릭 시 동작 (MemoFragment에서만)
-    override fun onSupportNavigateUp(): Boolean {
-        supportFragmentManager.popBackStack()
-        return true
-    }
-
-    // 백 버튼 클릭 시 동작
     private fun setOnBackPressedCallback() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // 백 스택에 프래그먼트가 있을 경우 최상위 프래그먼트 제거
+                // 백 스택에 프래그먼트가 있으면 최상위 프래그먼트 제거
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                 } else {
@@ -64,6 +52,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    // 업 버튼 활성화 (MemoFragment에서 사용)
+    fun showUpButton(show: Boolean) {
+        supportActionBar?.setDisplayHomeAsUpEnabled(show)
+    }
+
+    // 업 버튼 동작 (MemoFragment에서 사용)
+    override fun onSupportNavigateUp(): Boolean {
+        supportFragmentManager.popBackStack()
+        return true
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -85,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.setting -> {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
+                val intent = Intent(this, SettingsActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 }
                 startActivity(intent)
