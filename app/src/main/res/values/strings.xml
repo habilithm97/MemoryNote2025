@@ -18,4 +18,5 @@
     <string name="password_setup_complete">Password setup complete!</string>
     <string name="password_enter">Enter password</string>
     <string name="password_change">Change password</string>
+    <string name="password_required">Please set a password.</string>
 </resources>
