@@ -15,13 +15,16 @@ import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.constants.PopupAction
 import com.example.memorynote2025.databinding.FragmentListBinding
 import com.example.memorynote2025.room.memo.Memo
+import com.example.memorynote2025.utils.ToastUtil
 import com.example.memorynote2025.viewmodel.MemoViewModel
+import com.example.memorynote2025.viewmodel.PasswordViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null // nullable
     private val binding get() = _binding!! // non-null, 항상 null-safe한 접근 가능
-    // 프래그먼트 생명주기에 맞춰 MemoViewModel 생성
+    // 프래그먼트 생명주기에 맞춰 ViewModel 생성
     private val memoViewModel: MemoViewModel by viewModels()
+    private val passwordViewModel: PasswordViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,16 +70,22 @@ class ListFragment : Fragment() {
                         PopupAction.DELETE ->
                             showDeleteDialog(memo)
                         PopupAction.LOCK -> {
-                            val passwordFragment = PasswordFragment().apply {
-                                arguments = Bundle().apply {
-                                    putParcelable(Constants.MEMO, memo)
-                                    putBoolean(Constants.LOCK_STATE, memo.isLocked)
+                            passwordViewModel.getPassword { savedPassword ->
+                                if (savedPassword == null) {
+                                    ToastUtil.showToast(requireContext(), getString(R.string.password_required))
+                                } else {
+                                    val passwordFragment = PasswordFragment().apply {
+                                        arguments = Bundle().apply {
+                                            putParcelable(Constants.MEMO, memo)
+                                            putBoolean(Constants.LOCK_STATE, memo.isLocked)
+                                        }
+                                    }
+                                    parentFragmentManager.beginTransaction()
+                                        .replace(R.id.container, passwordFragment)
+                                        .addToBackStack(null)
+                                        .commit()
                                 }
                             }
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.container, passwordFragment)
-                                .addToBackStack(null)
-                                .commit()
                         }
                     }
                 }

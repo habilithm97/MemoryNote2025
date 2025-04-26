@@ -19,4 +19,5 @@
     <string name="password_setup_complete">비밀번호 설정 완료!</string>
     <string name="password_enter">비밀번호 입력</string>
     <string name="password_change">비밀번호 변경</string>
+    <string name="password_required">비밀번호를 설정해주세요.</string>
 </resources>
