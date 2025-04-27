@@ -133,12 +133,21 @@ class PasswordActivity : AppCompatActivity() {
     }
 
     private fun savePassword(pw: String) {
-        val password = Password(password = pw)
-        passwordViewModel.insertPassword(password)
-        Handler(Looper.getMainLooper()).postDelayed({
-            ToastUtil.showToast(this@PasswordActivity, getString(R.string.password_setup_complete))
-            finish()
-        }, 500)
+        passwordViewModel.apply {
+            getPassword { savedPassword ->
+                if (savedPassword == null) { // 비밀번호 없으면 생성
+                    val password = Password(password = pw)
+                    insertPassword(password)
+                } else { // 비밀번호 있으면 수정
+                    val updatedPassword = savedPassword.copy(password = pw)
+                    passwordViewModel.updatePassword(updatedPassword)
+                }
+                Handler(Looper.getMainLooper()).postDelayed({
+                    ToastUtil.showToast(this@PasswordActivity, getString(R.string.password_setup_complete))
+                    finish()
+                }, 500)
+            }
+        }
     }
 
     private fun clearPassword() {
