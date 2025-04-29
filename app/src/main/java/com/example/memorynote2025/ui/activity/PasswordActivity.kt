@@ -23,11 +23,11 @@ class PasswordActivity : AppCompatActivity() {
     private lateinit var dots: List<View>
 
     private var password = ""
-    private var confirmPassword = "" // 확인용 비밀번호
+    private var confirmingPassword = "" // 임시 저장 비밀번호
     private var storedPassword: String? = null // 저장된 비밀번호
 
-    private var isLocked = false // 비밀번호 입력 잠금 여부
-    private var isConfirming = false // 비밀번호 확인 진행 여부
+    private var isLocked = false // 비밀번호 입력 잠금 상태
+    private var isConfirming = false // 비밀번호 확인 상태
     private var isChanging = false // 비밀번호 변경 모드 여부
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,16 +44,19 @@ class PasswordActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.apply {
-            listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9).forEach { btn ->
-                btn.setOnClickListener { onNumberClick(btn.text.toString()) }
+            val buttons = listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9)
+            for (btn in buttons) {
+                btn.setOnClickListener {
+                    onPwKeyPressed(btn.text.toString())
+                }
             }
             dots = listOf(dot1, dot2, dot3, dot4)
 
             btnCancel.setOnClickListener {
                 finish()
             }
-            passwordViewModel.getPassword { savedPw ->
-                storedPassword = savedPw?.password
+            passwordViewModel.getPassword { savedPassword ->
+                storedPassword = savedPassword?.password
 
                 tvPwTitle.text = if (storedPassword == null) {
                     getString(R.string.password_new)
@@ -64,54 +67,61 @@ class PasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun onNumberClick(number: String) {
-        // 4자리 이상이면 추가 입력 제한
-        if (password.length >= 4) return
-
+    private fun onPwKeyPressed(number: String) {
+        // 입력 처리 중이거나 4자리 이상이면 추가 입력 제한
+        if (isLocked || password.length >= 4) return
+        
         password += number
         updateDots()
 
-        // 4자리 입력 완료 시 처리
+        // 4자리 입력 완료
         if (password.length == 4) {
             isLocked = true // 입력 잠금
 
             Handler(Looper.getMainLooper()).postDelayed({
-                if (storedPassword == null) { // 저장된 비밀번호가 없는 경우 -> 새 비밀번호 등록 진행
-                    if (!isConfirming) { // 첫 번째 입력일 경우
-                        confirmPassword = password // 저장
-                        isConfirming = true // 확인중으로 변경
-                        binding.tvPwTitle.text = getString(R.string.password_confirm)
-                        password = ""
-                    } else { // 두 번째 입력일 경우
-                        checkPassword()
+                when {
+                    // 저장된 비밀번호가 없으면 -> 새 비밀번호 설정
+                    storedPassword == null -> {
+                        if (!isConfirming) { // 첫 번째 입력
+                            confirmingPassword = password
+                            isConfirming = true
+                            binding.tvPwTitle.text = getString(R.string.password_confirm)
+                            password = ""
+                        } else { // 두 번째 입력
+                            confirmPassword()
+                        }
                     }
-                } else if (!isChanging) { // 저장된 비밀번호가 있는 경우
-                    checkExistPassword() // 기존 비밀번호 확인
-                } else { // 비밀번호 변경 모드
-                    if (!isConfirming) {
-                        confirmPassword = password
-                        isConfirming = true
-                        binding.tvPwTitle.text = getString(R.string.password_confirm)
-                        password = ""
-                    } else {
-                        checkPassword()
+                    // 저장된 비밀번호 o, 변경 모드 x
+                    !isChanging -> {
+                        confirmExistPassword()
+                    }
+                    // 저장된 비밀번호 o, 변경 모드 o
+                    else -> {
+                        if (!isConfirming) {
+                            confirmingPassword = password
+                            isConfirming = true
+                            binding.tvPwTitle.text = getString(R.string.password_confirm)
+                            password = ""
+                        } else {
+                            confirmPassword()
+                        }
                     }
                 }
                 updateDots()
-                isLocked = false // 입력 잠금 해제
+                isLocked = false
             }, 500)
         }
     }
 
     private fun updateDots() {
-        for (i in dots.indices) { // dots의 모든 인덱스를 순회
+        for (i in dots.indices) {
             // 현재 입력된 비밀번호 개수보다 작은 인덱스만 활성화
             dots[i].isSelected = i < password.length
         }
     }
 
-    private fun checkPassword() {
-        if (password == confirmPassword) {
+    private fun confirmPassword() {
+        if (password == confirmingPassword) {
             savePassword(password)
         } else {
             VibrateUtil.vibrate(this@PasswordActivity)
@@ -120,11 +130,11 @@ class PasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkExistPassword() {
+    private fun confirmExistPassword() {
         if (password == storedPassword) {
+            isChanging = true
             binding.tvPwTitle.text = getString(R.string.password_change)
             password = ""
-            isChanging = true
         } else {
             VibrateUtil.vibrate(this@PasswordActivity)
             binding.tvPwTitle.text = getString(R.string.password_reenter)
@@ -140,7 +150,7 @@ class PasswordActivity : AppCompatActivity() {
                     insertPassword(password)
                 } else { // 비밀번호 있으면 수정
                     val updatedPassword = savedPassword.copy(password = pw)
-                    passwordViewModel.updatePassword(updatedPassword)
+                    updatePassword(updatedPassword)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     ToastUtil.showToast(this@PasswordActivity, getString(R.string.password_setup_complete))
@@ -151,10 +161,10 @@ class PasswordActivity : AppCompatActivity() {
     }
 
     private fun clearPassword() {
-        isLocked = false // 입력 잠금 해제
-        isConfirming = false
+        isLocked = false // 비밀번호 입력 잠금 해제 (재입력 가능 상태로 전환)
+        isConfirming = false // 비밀번호 확인 상태 초기화 (새로운 흐름 시작 가능)
         password = ""
-        confirmPassword = ""
+        confirmingPassword = ""
         updateDots()
     }
 }
