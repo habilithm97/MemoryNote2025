@@ -9,12 +9,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
 import com.example.memorynote2025.room.password.Password
 import com.example.memorynote2025.utils.ToastUtil
 import com.example.memorynote2025.utils.VibrateUtil
 import com.example.memorynote2025.viewmodel.PasswordViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PasswordActivity : AppCompatActivity() {
     private val binding by lazy { ActivityPasswordBinding.inflate(layoutInflater) }
@@ -78,7 +81,10 @@ class PasswordActivity : AppCompatActivity() {
         if (password.length == 4) {
             isLocked = true // 입력 잠금
 
-            Handler(Looper.getMainLooper()).postDelayed({
+            // lifecycleScope : 생명주기 자동 관리 -> Handler보다 안전/간결
+            lifecycleScope.launch {
+                delay(500)
+
                 when {
                     // 저장된 비밀번호가 없으면 -> 새 비밀번호 설정
                     storedPassword == null -> {
@@ -109,7 +115,7 @@ class PasswordActivity : AppCompatActivity() {
                 }
                 updateDots()
                 isLocked = false
-            }, 500)
+            }
         }
     }
 
