@@ -1,8 +1,6 @@
 package com.example.memorynote2025.ui.activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -11,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.memorynote2025.R
+import com.example.memorynote2025.constants.PasswordString
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
 import com.example.memorynote2025.room.password.Password
 import com.example.memorynote2025.utils.ToastUtil
@@ -62,9 +61,9 @@ class PasswordActivity : AppCompatActivity() {
                 storedPassword = savedPassword?.password
 
                 tvPwTitle.text = if (storedPassword == null) {
-                    getString(R.string.password_new)
+                    getString(PasswordString.NEW.resId)
                 } else {
-                    getString(R.string.password_enter)
+                    getString(PasswordString.ENTER.resId)
                 }
             }
         }
@@ -91,7 +90,7 @@ class PasswordActivity : AppCompatActivity() {
                         if (!isConfirming) { // 첫 번째 입력
                             confirmingPassword.clear().append(password)
                             isConfirming = true
-                            binding.tvPwTitle.text = getString(R.string.password_confirm)
+                            binding.tvPwTitle.text = getString(PasswordString.CONFIRM.resId)
                             password.clear()
                         } else { // 두 번째 입력
                             confirmPassword()
@@ -106,7 +105,7 @@ class PasswordActivity : AppCompatActivity() {
                         if (!isConfirming) {
                             confirmingPassword.clear().append(password)
                             isConfirming = true
-                            binding.tvPwTitle.text = getString(R.string.password_confirm)
+                            binding.tvPwTitle.text = getString(PasswordString.CONFIRM.resId)
                             password.clear()
                         } else {
                             confirmPassword()
@@ -131,7 +130,7 @@ class PasswordActivity : AppCompatActivity() {
             savePassword(password.toString())
         } else {
             VibrateUtil.vibrate(this@PasswordActivity)
-            binding.tvPwTitle.text = getString(R.string.password_reenter)
+            binding.tvPwTitle.text = getString(PasswordString.REENTER.resId)
             clearPassword()
         }
     }
@@ -139,11 +138,11 @@ class PasswordActivity : AppCompatActivity() {
     private fun confirmExistPassword() {
         if (password.toString() == storedPassword) {
             isChanging = true
-            binding.tvPwTitle.text = getString(R.string.password_change)
+            binding.tvPwTitle.text = getString(PasswordString.CHANGE.resId)
             password.clear()
         } else {
             VibrateUtil.vibrate(this@PasswordActivity)
-            binding.tvPwTitle.text = getString(R.string.password_reenter)
+            binding.tvPwTitle.text = getString(PasswordString.REENTER.resId)
             clearPassword()
         }
     }
@@ -160,7 +159,7 @@ class PasswordActivity : AppCompatActivity() {
                 }
                 lifecycleScope.launch {
                     delay(500)
-                    ToastUtil.showToast(this@PasswordActivity, getString(R.string.password_setup_complete))
+                    ToastUtil.showToast(this@PasswordActivity, getString(PasswordString.SETUP_COMPLETE.resId))
                     finish()
                 }
             }
