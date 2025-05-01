@@ -2,13 +2,12 @@ package com.example.memorynote2025.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.memorynote2025.R
 import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.databinding.FragmentPasswordBinding
@@ -16,6 +15,8 @@ import com.example.memorynote2025.room.memo.Memo
 import com.example.memorynote2025.utils.VibrateUtil
 import com.example.memorynote2025.viewmodel.MemoViewModel
 import com.example.memorynote2025.viewmodel.PasswordViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PasswordFragment : Fragment() {
     private var _binding: FragmentPasswordBinding? = null
@@ -25,10 +26,10 @@ class PasswordFragment : Fragment() {
 
     private lateinit var dots: List<View>
 
-    private var password = ""
-    private var storedPassword: String? = null // 저장된 비밀번호
+    private var password = StringBuilder()
+    private var storedPassword: String? = null
 
-    private var isLocked = false // 비밀번호 입력 잠금 여부
+    private var isLocked = false // 비밀번호 입력 잠금 상태
 
     private val memo: Memo by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -50,8 +51,11 @@ class PasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9).forEach { btn ->
-                btn.setOnClickListener { onNumberClick(btn.text.toString()) }
+            val buttons = listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9)
+            for (btn in buttons) {
+                btn.setOnClickListener {
+                    onPwKeyPressed(btn.text.toString())
+                }
             }
             dots = listOf(dot1, dot2, dot3, dot4)
 
@@ -61,59 +65,70 @@ class PasswordFragment : Fragment() {
         }
     }
 
-    private fun onNumberClick(number: String) {
-        // 4자리 이상이면 추가 입력 제한
-        if (password.length >= 4) return
+    private fun onPwKeyPressed(number: String) {
+        if (isLocked || password.length >= 4) return
 
-        password += number
+        password.append(number)
         updateDots()
 
-        // 4자리 입력 완료 시 처리
         if (password.length == 4) {
-            isLocked = true // 입력 잠금
+            isLocked = true
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                checkPassword()
-            }, 500)
+            lifecycleScope.launch {
+                delay(500)
+                confirmPassword()
+            }
         }
     }
 
-    private fun checkPassword() {
-        passwordViewModel.getPassword { savedPw ->
-            storedPassword = savedPw?.password
-            if (storedPassword == password) { // 비밀번호 일치
-                // PasswordFragment로 넘어올 때 잠금 해제 모드인지 확인 (기본값은 false)
-                val unlockMode = arguments?.getBoolean(Constants.LOCK_STATE, false) ?: false
-                if (unlockMode) { // 잠금 해제 모드일 경우 false로 바꾸고 다시 ListFragment로 이동
-                    memoViewModel.updateMemo(memo.copy(isLocked = false))
-                    requireActivity().supportFragmentManager.popBackStack()
-                } else { // 잠금 모드일 경우
-                    if (memo.isLocked) { // 메모가 잠겨있는 경우 -> MemoFragment로 이동
-                        val memoFragment = MemoFragment().apply {
-                            arguments = Bundle().apply {
-                                putParcelable(Constants.MEMO, memo)
-                            }
-                        }
-                        parentFragmentManager.apply {
-                            popBackStack() // PasswordFragment 제거
-                            beginTransaction()
-                                .replace(R.id.container, memoFragment)
-                                .addToBackStack(null)
-                                .commit()
-                        }
-                    } else { // 메모가 잠겨있지 않은 경우 -> 이전 화면인 ListFragment로 이동
-                        memoViewModel.updateMemo(memo.copy(isLocked = true))
-                        requireActivity().supportFragmentManager.popBackStack()
-                    }
-                }
-            } else { // 불일치
-                VibrateUtil.vibrate(requireContext())
-                binding.tvPwTitle.text = getString(R.string.password_reenter)
+    private fun confirmPassword() {
+        passwordViewModel.getPassword { savedPassword ->
+            storedPassword = savedPassword?.password
+            val isCorrect = password.toString() == storedPassword // 비밀번호 일치 여부
+
+            if (isCorrect) { // 비밀번호 일치
+                handleCorrectPw()
+            } else { // 비밀번호 불일치
+                handleIncorrectPw()
             }
-            password = ""
+            password.clear()
             updateDots()
             isLocked = false
         }
+    }
+
+    private fun handleCorrectPw() {
+        val unlockMode = arguments?.getBoolean(Constants.LOCK_MODE, false) ?: false
+
+        when {
+            unlockMode -> { // 잠긴 상태 -> 잠금 해제 클릭 -> 잠금 해제
+                memoViewModel.updateMemo(memo.copy(isLocked = false))
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+            memo.isLocked -> { // 잠긴 메모 보기 -> MemoFragment로 이동
+                val memoFragment = MemoFragment().apply {
+                    arguments = Bundle().apply {
+                        putParcelable(Constants.MEMO, memo)
+                    }
+                }
+                parentFragmentManager.apply {
+                    popBackStack()
+                    beginTransaction()
+                        .replace(R.id.container, memoFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+            else -> { // 잠기지 않은 상태 -> 잠금 클릭 -> 잠금
+                memoViewModel.updateMemo(memo.copy(isLocked = true))
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        }
+    }
+
+    private fun handleIncorrectPw() {
+        VibrateUtil.vibrate(requireContext())
+        binding.tvPwTitle.text = getString(R.string.password_reenter)
     }
 
     private fun updateDots() {

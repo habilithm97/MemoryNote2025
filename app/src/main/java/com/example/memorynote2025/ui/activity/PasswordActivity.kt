@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.memorynote2025.R
 import com.example.memorynote2025.constants.PasswordString
 import com.example.memorynote2025.databinding.ActivityPasswordBinding
 import com.example.memorynote2025.room.password.Password
