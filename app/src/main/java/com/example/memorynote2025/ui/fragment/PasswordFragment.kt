@@ -29,7 +29,7 @@ class PasswordFragment : Fragment() {
     private var password = StringBuilder()
     private var storedPassword: String? = null
 
-    private var isLocked = false // 비밀번호 입력 잠금 상태
+    private var isLocked = false
 
     private val memo: Memo by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -112,7 +112,7 @@ class PasswordFragment : Fragment() {
                     }
                 }
                 parentFragmentManager.apply {
-                    popBackStack()
+                    popBackStack() // PasswordFragment를 백 스택에서 제거
                     beginTransaction()
                         .replace(R.id.container, memoFragment)
                         .addToBackStack(null)
