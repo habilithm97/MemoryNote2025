@@ -2,5 +2,5 @@ package com.example.memorynote2025.constants
 
 object Constants {
     const val MEMO = "memo"
-    const val LOCK_STATE = "lock_state"
+    const val LOCK_MODE = "lock_mode"
 }
