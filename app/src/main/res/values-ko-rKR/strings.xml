@@ -20,4 +20,6 @@
     <string name="password_enter">비밀번호 입력</string>
     <string name="password_change">비밀번호 변경</string>
     <string name="password_required">비밀번호를 설정해주세요.</string>
+
+    <string name="select">메모 선택</string>
 </resources>

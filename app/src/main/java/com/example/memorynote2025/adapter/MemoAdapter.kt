@@ -1,5 +1,6 @@
 package com.example.memorynote2025.adapter
 
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -22,25 +23,6 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     private var memoList: List<Memo> = emptyList() // 원본 리스트
-
-    // 원본 리스트 초기화 후 어댑터에 제출
-    fun submitMemoList(list: List<Memo>) {
-        memoList = list
-        submitList(list)
-    }
-
-    fun filterList(searchText: String, onFilterComplete: () -> Unit) {
-        val filteredList = if (searchText.isEmpty()) { // 비어 있으면
-            memoList // 원본 리스트
-        } else { // 비어있지 않으면
-            memoList.filter { // 필터링
-                it.content.contains(searchText, ignoreCase = true) // 대소문자 구분 없이 검색
-            }
-        }
-        submitList(filteredList) {
-            onFilterComplete() // 필터링 후속 작업
-        }
-    }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -118,5 +100,24 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
     override fun onBindViewHolder(holder: MemoViewHolder, position: Int) {
         // 현재 위치의 Memo 객체를 가져와서 ViewHolder에 전달
         holder.bind(getItem(position))
+    }
+
+    // 원본 리스트 초기화 후 어댑터에 제출
+    fun submitMemoList(list: List<Memo>) {
+        memoList = list
+        submitList(list)
+    }
+
+    fun filterList(searchText: String, onFilterComplete: () -> Unit) {
+        val filteredList = if (searchText.isEmpty()) { // 비어 있으면
+            memoList // 원본 리스트
+        } else { // 비어있지 않으면
+            memoList.filter { // 필터링
+                it.content.contains(searchText, ignoreCase = true) // 대소문자 구분 없이 검색
+            }
+        }
+        submitList(filteredList) {
+            onFilterComplete() // 필터링 후속 작업
+        }
     }
 }

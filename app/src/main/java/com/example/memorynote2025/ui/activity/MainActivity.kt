@@ -83,6 +83,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.select -> {
+                toggleMenuVisibility(item.itemId)
+                true
+            }
             R.id.setting -> {
                 val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -90,7 +94,22 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.cancel -> {
+                toggleMenuVisibility(item.itemId)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun toggleMenuVisibility(clickedItemId: Int) {
+        with(binding.toolbar.menu) {
+            val isSelect = clickedItemId == R.id.select
+
+            findItem(R.id.select).isVisible = !isSelect
+            findItem(R.id.setting).isVisible = !isSelect
+            findItem(R.id.cancel).isVisible = isSelect
+            findItem(R.id.selectAll).isVisible = isSelect
         }
     }
 }
