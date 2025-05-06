@@ -80,11 +80,13 @@ class MemoFragment : Fragment() {
 
         requireActivity().invalidateOptionsMenu() // 옵션 메뉴 업데이트
 
-        binding.apply {
-            edtMemo.requestFocus()
-            // requireContext : null을 반환하지 않는 Context를 보장
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(edtMemo, InputMethodManager.SHOW_IMPLICIT)
+        if (previousMemo == null) {
+            binding.apply {
+                edtMemo.requestFocus()
+                // requireContext : null을 반환하지 않는 Context를 보장
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(edtMemo, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
     }
 
