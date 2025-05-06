@@ -14,7 +14,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/selectAll"
-        android:title="@string/select"
+        android:title="@string/select_all"
         android:visible="false"
         app:showAsAction="always" />
 </menu>

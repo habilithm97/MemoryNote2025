@@ -1,6 +1,5 @@
 package com.example.memorynote2025.adapter
 
-import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
