@@ -80,7 +80,7 @@ class MemoFragment : Fragment() {
 
         requireActivity().invalidateOptionsMenu() // 옵션 메뉴 업데이트
 
-        if (previousMemo == null) {
+        if (previousMemo == null) { // 새 메모를 작성할 때에만
             binding.apply {
                 edtMemo.requestFocus()
                 // requireContext : null을 반환하지 않는 Context를 보장

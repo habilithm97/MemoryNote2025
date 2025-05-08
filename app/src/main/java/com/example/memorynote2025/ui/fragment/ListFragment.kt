@@ -145,7 +145,20 @@ class ListFragment : Fragment() {
             .setTitle(getString(R.string.delete))
             .setMessage(getString(R.string.delete_dialog))
             .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
-                memoViewModel.deleteMemo(memo)
+                if (memo.isLocked) {
+                    val passwordFragment = PasswordFragment().apply {
+                        arguments = Bundle().apply {
+                            putParcelable(Constants.MEMO, memo)
+                            putBoolean(Constants.LOCK_DELETE_MODE, true)
+                        }
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.container, passwordFragment)
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    memoViewModel.deleteMemo(memo)
+                }
                 dialog.dismiss()
             }
             .setNegativeButton(getString(R.string.cancel),null)
