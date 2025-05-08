@@ -38,6 +38,10 @@ class PasswordFragment : Fragment() {
             TODO("VERSION.SDK_INT < TIRAMISU")
         }
     }
+    // 비밀번호 확인 후 삭제 = true, 아니면 false (기본값)
+    private val isLockDelete: Boolean by lazy {
+        arguments?.getBoolean(Constants.LOCK_DELETE_MODE, false) ?: false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,6 +105,10 @@ class PasswordFragment : Fragment() {
         val unlockMode = arguments?.getBoolean(Constants.LOCK_MODE, false) ?: false
 
         when {
+            isLockDelete -> {
+                memoViewModel.deleteMemo(memo)
+                requireActivity().supportFragmentManager.popBackStack()
+            }
             unlockMode -> { // 잠긴 상태 -> 잠금 해제 클릭 -> 잠금 해제
                 memoViewModel.updateMemo(memo.copy(isLocked = false))
                 requireActivity().supportFragmentManager.popBackStack()
