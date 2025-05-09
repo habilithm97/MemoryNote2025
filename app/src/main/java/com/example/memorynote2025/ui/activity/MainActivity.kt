@@ -82,29 +82,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.select -> {
-                toggleMenuVisibility(item.itemId)
-                true
-            }
-            R.id.setting -> {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (fragment is ListFragment) {
+            return when (item.itemId) {
+                R.id.select -> {
+                    toggleMenuVisibility(item.itemId)
+                    fragment.setMultiSelect(true)
+                    true
                 }
-                startActivity(intent)
-                true
+                R.id.setting -> {
+                    val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                    startActivity(intent)
+                    true
+                }
+                R.id.cancel -> {
+                    toggleMenuVisibility(item.itemId)
+                    fragment.setMultiSelect(false)
+                    true
+                }
+                else -> super.onOptionsItemSelected(item) // 그 외 항목은 상위 클래스에게 위임
             }
-            R.id.cancel -> {
-                toggleMenuVisibility(item.itemId)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
+        return super.onOptionsItemSelected(item) // ListFragment가 아니면 기본 처리 위임
     }
 
-    private fun toggleMenuVisibility(clickedItemId: Int) {
+    private fun toggleMenuVisibility(itemId: Int) {
         with(binding.toolbar.menu) {
-            val isSelect = clickedItemId == R.id.select
+            val isSelect = itemId == R.id.select
 
             findItem(R.id.select).isVisible = !isSelect
             findItem(R.id.setting).isVisible = !isSelect

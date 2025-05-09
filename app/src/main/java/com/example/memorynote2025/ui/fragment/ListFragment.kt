@@ -25,6 +25,7 @@ class ListFragment : Fragment() {
     // 프래그먼트 생명주기에 맞춰 ViewModel 생성
     private val memoViewModel: MemoViewModel by viewModels()
     private val passwordViewModel: PasswordViewModel by viewModels()
+    private lateinit var memoAdapter: MemoAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +40,7 @@ class ListFragment : Fragment() {
 
         binding.apply {
             // 어댑터 생성 및 아이템 클릭 동작 정의
-            val memoAdapter = MemoAdapter(
+            memoAdapter = MemoAdapter(
                 onItemClick = { memo ->
                     searchView.setQuery("", false) // 검색어 초기화
 
@@ -163,6 +164,10 @@ class ListFragment : Fragment() {
             }
             .setNegativeButton(getString(R.string.cancel),null)
             .show()
+    }
+
+    fun setMultiSelect(isMultiSelect: Boolean) {
+        memoAdapter.isMultiSelect = isMultiSelect
     }
 
     override fun onResume() {
