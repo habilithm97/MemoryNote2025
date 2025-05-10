@@ -22,13 +22,24 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
     ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     private var memoList: List<Memo> = emptyList() // 원본 리스트
+    private var selectedMemos = mutableSetOf<Int>() // 선택된 메모
 
     var isMultiSelect: Boolean = false
         // isMultiSelect에 값이 할당될 때마다 자동으로 호출
         set(value) {
             field = value // 내부 백킹 필드에 저장
+            if (!value) selectedMemos.clear() // 다중 선택 모드 해제 시 선택 상태 초기화
             notifyDataSetChanged() // 전체 아이템 갱신
         }
+    
+    // 전체 선택
+    fun selectAll() {
+        selectedMemos.apply {
+            clear()
+            addAll(currentList.indices)
+        }
+        notifyDataSetChanged()
+    }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,7 +51,10 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
                     Locale.getDefault()).format(Date(memo.date))
                 ivLock.visibility = if (memo.isLocked) View.VISIBLE else View.INVISIBLE
-                checkBox.visibility = if (isMultiSelect) View.VISIBLE else View.GONE
+                checkBox.apply {
+                    visibility = if (isMultiSelect) View.VISIBLE else View.GONE
+                    isChecked = selectedMemos.contains(adapterPosition)
+                }
 
                 root.apply {
                     setOnClickListener {

@@ -97,6 +97,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+                R.id.selectAll -> {
+                    fragment.selectAll()
+                    true
+                }
                 R.id.cancel -> {
                     toggleMenuVisibility(item.itemId)
                     fragment.setMultiSelect(false)

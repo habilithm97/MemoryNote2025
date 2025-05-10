@@ -170,6 +170,10 @@ class ListFragment : Fragment() {
         memoAdapter.isMultiSelect = isMultiSelect
     }
 
+    fun selectAll() {
+        (binding.recyclerView.adapter as? MemoAdapter)?.selectAll()
+    }
+
     override fun onResume() {
         super.onResume()
 
