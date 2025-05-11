@@ -31,12 +31,16 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             if (!value) selectedMemos.clear() // 다중 선택 모드 해제 시 선택 상태 초기화
             notifyDataSetChanged() // 전체 아이템 갱신
         }
-    
-    // 전체 선택
+
     fun selectAll() {
-        selectedMemos.apply {
-            clear()
-            addAll(currentList.indices)
+        // 현재 선택된 메모 수 = 전체 메모 수 -> 전체 선택 해제
+        if (selectedMemos.size == currentList.size) {
+            selectedMemos.clear()
+        } else { // 전체 선택
+            selectedMemos.apply {
+                clear()
+                addAll(currentList.indices)
+            }
         }
         notifyDataSetChanged()
     }
@@ -53,7 +57,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 ivLock.visibility = if (memo.isLocked) View.VISIBLE else View.INVISIBLE
                 checkBox.apply {
                     visibility = if (isMultiSelect) View.VISIBLE else View.GONE
-                    isChecked = selectedMemos.contains(adapterPosition)
+                    isChecked = adapterPosition in selectedMemos // 선택된 항목이면 체크
                 }
 
                 root.apply {
