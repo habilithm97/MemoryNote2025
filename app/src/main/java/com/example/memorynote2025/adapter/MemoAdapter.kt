@@ -55,11 +55,14 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                 tvDate.text = SimpleDateFormat(itemView.context.getString(R.string.date_format),
                     Locale.getDefault()).format(Date(memo.date))
                 ivLock.visibility = if (memo.isLocked) View.VISIBLE else View.INVISIBLE
-                checkBox.apply {
-                    visibility = if (isMultiSelect) View.VISIBLE else View.GONE
-                    isChecked = adapterPosition in selectedMemos // 선택된 항목이면 체크
-                }
 
+                // adapterPosition이 -1일 수 있기 때문에 예외 처리 (바인딩 중이거나 뷰 재활용 시)
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    checkBox.apply {
+                        visibility = if (isMultiSelect) View.VISIBLE else View.GONE
+                        isChecked = adapterPosition in selectedMemos // 선택된 항목이면 체크
+                    }
+                }
                 root.apply {
                     setOnClickListener {
                         onItemClick(memo)
