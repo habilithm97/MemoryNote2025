@@ -122,4 +122,13 @@ class MainActivity : AppCompatActivity() {
             findItem(R.id.selectAll).isVisible = isSelect
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+        if (fragment is ListFragment) {
+            fragment.setMultiSelect(false) // 다중 선택 모드 해제
+        }
+    }
 }
