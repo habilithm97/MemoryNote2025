@@ -97,8 +97,8 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.selectAll -> {
-                    fragment.selectAll()
+                R.id.all -> {
+                    fragment.toggleSelectAll()
                     true
                 }
                 R.id.cancel -> {
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             findItem(R.id.select).isVisible = !isSelect
             findItem(R.id.setting).isVisible = !isSelect
             findItem(R.id.cancel).isVisible = isSelect
-            findItem(R.id.selectAll).isVisible = isSelect
+            findItem(R.id.all).isVisible = isSelect
         }
     }
 

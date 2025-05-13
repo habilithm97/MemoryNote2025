@@ -170,7 +170,7 @@ class ListFragment : Fragment() {
         memoAdapter.isMultiSelect = isMultiSelect
     }
 
-    fun selectAll() {
+    fun toggleSelectAll() {
         (binding.recyclerView.adapter as? MemoAdapter)?.selectAll()
     }
 
