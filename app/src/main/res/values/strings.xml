@@ -22,4 +22,5 @@
 
     <string name="select">Select Memo</string>
     <string name="all">All</string>
+    <string name="selected_delete">Select memos to delete.</string>
 </resources>

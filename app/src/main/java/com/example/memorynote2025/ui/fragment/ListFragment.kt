@@ -15,6 +15,7 @@ import com.example.memorynote2025.constants.Constants
 import com.example.memorynote2025.constants.PopupAction
 import com.example.memorynote2025.databinding.FragmentListBinding
 import com.example.memorynote2025.room.memo.Memo
+import com.example.memorynote2025.ui.activity.MainActivity
 import com.example.memorynote2025.utils.ToastUtil
 import com.example.memorynote2025.viewmodel.MemoViewModel
 import com.example.memorynote2025.viewmodel.PasswordViewModel
@@ -69,7 +70,7 @@ class ListFragment : Fragment() {
                 onItemLongClick = { memo, action ->
                     when (action) {
                         PopupAction.DELETE ->
-                            showDeleteDialog(memo)
+                            showDeleteDialog(listOf(memo), isMultiDelete = false)
                         PopupAction.LOCK -> {
                             passwordViewModel.getPassword { savedPassword ->
                                 if (savedPassword == null) {
@@ -141,24 +142,30 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun showDeleteDialog(memo: Memo) {
+    private fun showDeleteDialog(memos: List<Memo>, isMultiDelete: Boolean) {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete))
             .setMessage(getString(R.string.delete_dialog))
             .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
-                if (memo.isLocked) {
-                    val passwordFragment = PasswordFragment().apply {
-                        arguments = Bundle().apply {
-                            putParcelable(Constants.MEMO, memo)
-                            putBoolean(Constants.LOCK_DELETE_MODE, true)
+                memos.forEach { memo ->
+                    if (memo.isLocked) {
+                        val passwordFragment = PasswordFragment().apply {
+                            arguments = Bundle().apply {
+                                putParcelable(Constants.MEMO, memo)
+                                putBoolean(Constants.LOCK_DELETE_MODE, true)
+                            }
                         }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, passwordFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    } else {
+                        memoViewModel.deleteMemo(memo)
                     }
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.container, passwordFragment)
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    memoViewModel.deleteMemo(memo)
+                }
+                if (isMultiDelete) {
+                    memoAdapter.isMultiSelect = false
+                    (requireActivity() as? MainActivity)?.toggleMenuVisibility(R.id.cancel)
                 }
                 dialog.dismiss()
             }
@@ -171,7 +178,17 @@ class ListFragment : Fragment() {
     }
 
     fun toggleSelectAll() {
-        (binding.recyclerView.adapter as? MemoAdapter)?.selectAll()
+        (binding.recyclerView.adapter as? MemoAdapter)?.toggleSelectAll()
+    }
+
+    fun deleteSelectedMemos() {
+        val selectedMemos = memoAdapter.getSelectedMemos()
+
+        if (selectedMemos.isEmpty()) {
+            ToastUtil.showToast(requireContext(), getString(R.string.selected_delete))
+        } else {
+            showDeleteDialog(selectedMemos, isMultiDelete = true)
+        }
     }
 
     override fun onResume() {

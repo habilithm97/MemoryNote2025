@@ -97,13 +97,17 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.all -> {
-                    fragment.toggleSelectAll()
-                    true
-                }
                 R.id.cancel -> {
                     toggleMenuVisibility(item.itemId)
                     fragment.setMultiSelect(false)
+                    true
+                }
+                R.id.delete -> {
+                    fragment.deleteSelectedMemos()
+                    true
+                }
+                R.id.all -> {
+                    fragment.toggleSelectAll()
                     true
                 }
                 else -> super.onOptionsItemSelected(item) // 그 외 항목은 상위 클래스에게 위임
@@ -112,13 +116,14 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item) // ListFragment가 아니면 기본 처리 위임
     }
 
-    private fun toggleMenuVisibility(itemId: Int) {
+    fun toggleMenuVisibility(itemId: Int) {
         with(binding.toolbar.menu) {
             val isSelect = itemId == R.id.select
 
             findItem(R.id.select).isVisible = !isSelect
             findItem(R.id.setting).isVisible = !isSelect
             findItem(R.id.cancel).isVisible = isSelect
+            findItem(R.id.delete).isVisible = isSelect
             findItem(R.id.all).isVisible = isSelect
         }
     }
