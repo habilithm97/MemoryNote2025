@@ -23,4 +23,5 @@
 
     <string name="select">메모 선택</string>
     <string name="all">전체</string>
+    <string name="selected_delete">삭제할 메모를 선택하세요.</string>
 </resources>

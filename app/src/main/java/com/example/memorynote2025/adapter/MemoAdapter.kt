@@ -32,7 +32,7 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             notifyDataSetChanged() // 전체 아이템 갱신
         }
 
-    fun selectAll() {
+    fun toggleSelectAll() {
         // 현재 선택된 메모 수 = 전체 메모 수 -> 전체 선택 해제
         if (selectedMemos.size == currentList.size) {
             selectedMemos.clear()
@@ -43,6 +43,13 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
             }
         }
         notifyDataSetChanged()
+    }
+
+    // 선택된 인덱스에서 유효한 Memo 객체만 추출하여 리스트로 반환
+    fun getSelectedMemos(): List<Memo> {
+        return selectedMemos.mapNotNull { index ->
+            currentList.getOrNull(index)
+        }
     }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
@@ -61,6 +68,15 @@ class MemoAdapter(private val onItemClick: (Memo) -> Unit,
                     checkBox.apply {
                         visibility = if (isMultiSelect) View.VISIBLE else View.GONE
                         isChecked = adapterPosition in selectedMemos // 선택된 항목이면 체크
+
+                        // 체크 상태 변경 시 selectedMemos에 추가 또는 제거
+                        setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked) {
+                                selectedMemos.add(adapterPosition)
+                            } else {
+                                selectedMemos.remove(adapterPosition)
+                            }
+                        }
                     }
                 }
                 root.apply {
