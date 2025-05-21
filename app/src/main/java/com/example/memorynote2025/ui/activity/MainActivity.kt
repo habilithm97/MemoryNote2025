@@ -85,16 +85,16 @@ class MainActivity : AppCompatActivity() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragment is ListFragment) {
             return when (item.itemId) {
-                R.id.select -> {
-                    toggleMenuVisibility(item.itemId)
-                    fragment.setMultiSelect(true)
-                    true
-                }
                 R.id.setting -> {
                     val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                     }
                     startActivity(intent)
+                    true
+                }
+                R.id.select -> {
+                    toggleMenuVisibility(item.itemId)
+                    fragment.setMultiSelect(true)
                     true
                 }
                 R.id.cancel -> {
@@ -120,8 +120,8 @@ class MainActivity : AppCompatActivity() {
         with(binding.toolbar.menu) {
             val isSelect = itemId == R.id.select
 
-            findItem(R.id.select).isVisible = !isSelect
             findItem(R.id.setting).isVisible = !isSelect
+            findItem(R.id.select).isVisible = !isSelect
             findItem(R.id.cancel).isVisible = isSelect
             findItem(R.id.delete).isVisible = isSelect
             findItem(R.id.all).isVisible = isSelect
