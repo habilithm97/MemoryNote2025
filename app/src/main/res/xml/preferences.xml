@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="pwSettings"
+        android:summary="@string/password_settings_summary"
+        android:title="@string/password_settings" />
+
+    <SwitchPreferenceCompat
+        android:key="sync"
+        android:summary="@string/sync_after_login_summary"
+        android:title="@string/sync_after_login" />
+
+</PreferenceScreen>
