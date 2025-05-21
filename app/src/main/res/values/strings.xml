@@ -12,6 +12,7 @@
 
     <string name="settings">Settings</string>
     <string name="password_settings">Password Settings</string>
+    <string name="password_settings_summary">Save and change passwords.</string>
     <string name="password_new">Enter a new password</string>
     <string name="password_confirm">Confirm password</string>
     <string name="password_reenter">Re-enter password</string>
@@ -23,4 +24,7 @@
     <string name="select">Select Memo</string>
     <string name="all">All</string>
     <string name="selected_delete">Select memos to delete.</string>
+
+    <string name="sync_after_login">Sync with server after login</string>
+    <string name="sync_after_login_summary">Sign in to back up and restore your memos on the server.</string>
 </resources>

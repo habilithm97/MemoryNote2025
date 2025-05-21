@@ -61,4 +61,7 @@ dependencies {
 
     // Fragment API에 코틀린 확장 기능(KTX) 추가
     implementation(libs.androidx.fragment.ktx)
+
+    // Preference
+    implementation(libs.androidx.preference.ktx)
 }
