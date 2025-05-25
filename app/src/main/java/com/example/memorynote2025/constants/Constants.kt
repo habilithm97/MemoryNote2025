@@ -5,4 +5,5 @@ object Constants {
     const val LOCK_MODE = "lock_mode"
     const val LOCK_DELETE_MODE = "lock_delete_mode"
     const val PW_SETTINGS = "pwSettings"
+    const val SYNC = "sync"
 }

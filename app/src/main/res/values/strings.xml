@@ -25,6 +25,9 @@
     <string name="all">All</string>
     <string name="selected_delete">Select memos to delete.</string>
 
-    <string name="sync_after_login">Sync with server after login</string>
-    <string name="sync_after_login_summary">Sign in to back up and restore your memos on the server.</string>
+    <string name="login_info">Login</string>
+    <string name="login_summary">Login is required.</string>
+
+    <string name="sync">Sync</string>
+    <string name="sync_summary">Back up and restore your memos.</string>
 </resources>
