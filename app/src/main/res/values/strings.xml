@@ -30,4 +30,6 @@
 
     <string name="sync">Sync</string>
     <string name="sync_summary">Back up and restore your memos.</string>
+
+    <string name="find_password">Did you forget your password?</string>
 </resources>

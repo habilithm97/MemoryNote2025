@@ -31,4 +31,6 @@
     
     <string name="sync">동기화</string>
     <string name="sync_summary">메모를 백업 및 복원합니다.</string>
+
+    <string name="find_password">비밀번호를 잊으셨나요?</string>
 </resources>
