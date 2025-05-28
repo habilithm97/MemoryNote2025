@@ -54,7 +54,12 @@ class PasswordActivity : AppCompatActivity() {
             dots = listOf(dot1, dot2, dot3, dot4)
 
             btnCancel.setOnClickListener {
-                finish()
+                if (password.isNotEmpty()) {
+                    password.deleteAt(password.length - 1)
+                    updateDots()
+                } else {
+                    finish()
+                }
             }
             passwordViewModel.getPassword { savedPassword ->
                 storedPassword = savedPassword?.password
