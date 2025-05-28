@@ -64,7 +64,12 @@ class PasswordFragment : Fragment() {
             dots = listOf(dot1, dot2, dot3, dot4)
 
             btnCancel.setOnClickListener {
-                requireActivity().supportFragmentManager.popBackStack()
+                if (password.isNotEmpty()) {
+                    password.deleteAt(password.length - 1)
+                    updateDots()
+                } else {
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
             }
         }
     }
