@@ -31,7 +31,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-        isCoreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true // 구버전 Android에서 최신 Java 기능 사용
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -67,5 +67,5 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
 
     implementation(libs.play.services.base)
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring(libs.corelibrarydesugaring)
 }
