@@ -25,11 +25,16 @@
     <string name="all">All</string>
     <string name="selected_delete">Select memos to delete.</string>
 
-    <string name="login_info">Login</string>
+    <string name="login">Login</string>
+    <string name="login_info">Login Info</string>
     <string name="login_summary">Login is required.</string>
 
     <string name="sync">Sync</string>
     <string name="sync_summary">Back up and restore your memos.</string>
 
     <string name="password_find">Did you forget your password?</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">Or</string>
+    <string name="signup">Sign Up</string>
 </resources>
