@@ -15,7 +15,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        val loginPref = findPreference<Preference>("loginInfo")
+        val loginPref = findPreference<Preference>(Constants.LOGIN_INFO)
         loginPref?.setOnPreferenceClickListener {
             context?.let {
                 val intent = Intent(it, LoginActivity::class.java)

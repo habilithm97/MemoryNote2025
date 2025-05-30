@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        android:key="loginInfo"
+        android:key="login_info"
         android:summary="@string/login_summary"
         android:title="@string/login_info" />
 
@@ -12,7 +12,7 @@
         android:title="@string/sync" />
 
     <Preference
-        android:key="pwSettings"
+        android:key="pw_settings"
         android:summary="@string/password_settings_summary"
         android:title="@string/password_settings" />
 
