@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             return when (item.itemId) {
                 R.id.setting -> {
                     val intent = Intent(this@MainActivity, SettingsActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                     }
                     startActivity(intent)
                     true

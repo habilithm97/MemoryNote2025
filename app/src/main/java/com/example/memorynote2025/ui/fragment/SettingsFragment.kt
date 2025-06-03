@@ -18,7 +18,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val loginPref = findPreference<Preference>(Constants.LOGIN_INFO)
         loginPref?.setOnPreferenceClickListener {
             context?.let {
-                val intent = Intent(it, LoginActivity::class.java)
+                val intent = Intent(it, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
                 startActivity(intent)
             }
             true
@@ -31,7 +33,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val pwPref = findPreference<Preference>(Constants.PW_SETTINGS)
         pwPref?.setOnPreferenceClickListener {
             context?.let {
-                val intent = Intent(it, PasswordActivity::class.java)
+                val intent = Intent(it, PasswordActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
                 startActivity(intent)
             }
             true
