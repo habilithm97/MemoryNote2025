@@ -31,7 +31,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-        isCoreLibraryDesugaringEnabled = true // 구버전 Android에서 최신 Java 기능 사용
+        isCoreLibraryDesugaringEnabled = true // 구버전 Android에서 최신 Java 기능 사용 가능
     }
     kotlinOptions {
         jvmTarget = "1.8"

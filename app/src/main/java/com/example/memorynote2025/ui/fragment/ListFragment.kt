@@ -51,20 +51,14 @@ class ListFragment : Fragment() {
                                 putParcelable(Constants.MEMO, memo)
                             }
                         }
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.container, passwordFragment)
-                            .addToBackStack(null)
-                            .commit()
+                        replaceIfNew(passwordFragment)
                     } else { // 메모가 잠겨 있지 않으면 -> 바로 MemoFragment로 이동
                         val memoFragment = MemoFragment().apply {
                             arguments = Bundle().apply {
                                 putParcelable(Constants.MEMO, memo)
                             }
                         }
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.container, memoFragment)
-                            .addToBackStack(null)
-                            .commit()
+                        replaceIfNew(memoFragment)
                     }
                 },
                 onItemLongClick = { memo, action ->
@@ -82,10 +76,7 @@ class ListFragment : Fragment() {
                                             putBoolean(Constants.LOCK_MODE, memo.isLocked)
                                         }
                                     }
-                                    parentFragmentManager.beginTransaction()
-                                        .replace(R.id.container, passwordFragment)
-                                        .addToBackStack(null)
-                                        .commit()
+                                    replaceIfNew(passwordFragment)
                                 }
                             }
                         }
@@ -102,11 +93,7 @@ class ListFragment : Fragment() {
             }
             fab.setOnClickListener {
                 searchView.setQuery("", false) // 검색어 초기화
-
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.container, MemoFragment())
-                    .addToBackStack(null)
-                    .commit()
+                replaceIfNew(MemoFragment())
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
                 memoAdapter.apply {
@@ -155,10 +142,7 @@ class ListFragment : Fragment() {
                                 putBoolean(Constants.LOCK_DELETE_MODE, true)
                             }
                         }
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.container, passwordFragment)
-                            .addToBackStack(null)
-                            .commit()
+                        replaceIfNew(passwordFragment)
                     } else {
                         memoViewModel.deleteMemo(memo)
                     }
@@ -188,6 +172,17 @@ class ListFragment : Fragment() {
             ToastUtil.showToast(requireContext(), getString(R.string.selected_delete))
         } else {
             showDeleteDialog(selectedMemos, isMultiDelete = true)
+        }
+    }
+
+    // 프래그먼트 중복 실행 방지
+    private fun replaceIfNew(newFragment: Fragment) {
+        val currentFragment = parentFragmentManager.findFragmentById(R.id.container)
+        if (currentFragment?.javaClass != newFragment.javaClass) {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.container, newFragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
