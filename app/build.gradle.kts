@@ -1,8 +1,9 @@
-plugins {
+plugins { // 이 모듈(app)에 실제로 필요한 기능을 플러그인으로 적용
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+    alias(libs.plugins.google.services) // Firebase 연동
 }
 
 android {
@@ -68,4 +69,7 @@ dependencies {
 
     implementation(libs.play.services.base)
     coreLibraryDesugaring(libs.corelibrarydesugaring)
+
+    implementation(libs.firebase.auth) // Firebase 인증
+    implementation(libs.play.services.auth) // 구글 로그인
 }

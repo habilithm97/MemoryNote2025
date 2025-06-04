@@ -17,6 +17,8 @@ fragmentKtx = "1.8.6"
 preferenceKtx = "1.2.1"
 playServicesBase = "18.7.0"
 desugar = "2.1.5"
+firebaseAuth = "22.3.0"
+playServicesAuth = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,8 +38,11 @@ androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", ve
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "playServicesBase" }
 corelibrarydesugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }

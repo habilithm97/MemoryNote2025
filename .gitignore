@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# 🔒 Firebase config 파일 무시
+app/google-services.json
