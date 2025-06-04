@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.memorynote2025.R
 import com.example.memorynote2025.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -23,6 +24,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-
+        binding.apply {
+            setSupportActionBar(toolbar)
+            supportActionBar?.apply {
+                setDisplayHomeAsUpEnabled(true)
+                title = getString(R.string.login)
+            }
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 }
