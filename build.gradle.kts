@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
-    // Firebase 설정 파일 (google-services.json)을 자동으로 앱에 적용하기 위한 플러그인
+    // Firebase 설정 파일(google-services.json)을 자동으로 앱에 적용
     alias(libs.plugins.google.services) apply false
 }
 // 프로젝트 전체에서 사용 가능한 플러그인 선언

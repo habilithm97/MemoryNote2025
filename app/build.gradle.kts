@@ -1,10 +1,19 @@
-plugins { // 이 모듈(app)에 실제로 필요한 기능을 플러그인으로 적용
+import java.io.FileInputStream
+import java.util.Properties
+
+plugins { // 모듈(app)에 실제로 필요한 기능을 플러그인으로 적용
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    alias(libs.plugins.google.services) // Firebase 연동
+    alias(libs.plugins.google.services) // Firebase 연동을 위한 구글 서비스
 }
+
+val properties = Properties() // 설정 파일 속성 읽기
+// 프로젝트 루트 디렉토리의 local.properties를 읽음
+properties.load(FileInputStream(rootProject.file("local.properties")))
+// local.properties에서 해당 값을 가져오고, 없으면 빈 문자열 반환
+val webClientId = properties.getProperty("WEB_CLIENT_ID") ?: ""
 
 android {
     namespace = "com.example.memorynote2025"
@@ -18,6 +27,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // BuildConfig에 상수를 문자열로 추가
+        buildConfigField("String", "WEB_CLIENT_ID", "\"$webClientId\"")
     }
 
     buildTypes {
@@ -39,6 +51,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -70,6 +83,9 @@ dependencies {
     implementation(libs.play.services.base)
     coreLibraryDesugaring(libs.corelibrarydesugaring)
 
+    implementation(platform(libs.firebase.bom)) // Firebase 버전 통합 관리
     implementation(libs.firebase.auth) // Firebase 인증
-    implementation(libs.play.services.auth) // 구글 로그인
+    implementation(libs.credentials) // 자격 증명 관리자 기본 라이브러리
+    implementation(libs.credentials.play.services.auth) // 구글 로그인을 위한 Play Services 연동
+    implementation(libs.googleid) // 구글 id 로그인
 }
